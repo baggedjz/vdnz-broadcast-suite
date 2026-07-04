@@ -5,6 +5,7 @@ const menu = [
   { name: "👥 Drivers", path: "/drivers" },
   { name: "🏁 Battles", path: "/battles" },
   { name: "🌳 Brackets", path: "/brackets" },
+  { name: "🎥 Broadcast", path: "/broadcast" },
   { name: "⚙️ Settings", path: "/settings" },
 ];
 

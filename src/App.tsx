@@ -6,6 +6,7 @@ import Dashboard from "./pages/Dashboard";
 import Drivers from "./pages/Drivers";
 import Battles from "./pages/Battles";
 import Brackets from "./pages/Brackets";
+import Broadcast from "./pages/Broadcast";
 import Settings from "./pages/Settings";
 
 export default function App() {
@@ -16,6 +17,7 @@ export default function App() {
         <Route path="/drivers" element={<Drivers />} />
         <Route path="/battles" element={<Battles />} />
         <Route path="/brackets" element={<Brackets />} />
+        <Route path="/broadcast" element={<Broadcast />} />
         <Route path="/settings" element={<Settings />} />
       </Route>
 
