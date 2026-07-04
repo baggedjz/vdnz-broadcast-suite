@@ -1,75 +1,57 @@
-# React + TypeScript + Vite
+# VDNZ Broadcast Suite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A professional broadcast control application for Virtual Drift New Zealand events.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+### Current
+- React + TypeScript
+- OBS WebSocket Connection
+- Dashboard
+- Professional UI
 
-## React Compiler
+### Planned
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+#### Broadcast
+- VS Overlay
+- Winner Overlay
+- Lower Third
+- Judge Scores
+- Sponsor Graphics
 
-## Expanding the ESLint configuration
+#### Drivers
+- Driver Database
+- Team Database
+- Car Database
+- Driver Photos
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+#### Tournament
+- Top 32
+- Top 16
+- Great 8
+- Final Four
+- Finals
+- Championship Standings
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+#### OBS
+- Scene Control
+- Source Visibility
+- Browser Source Control
+- Recording
+- Streaming
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+#### Assetto Corsa
+- Live Driver Detection
+- Battle Detection
+- Track Detection
+- Automatic Overlay Updates
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Tech Stack
 
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
-```
+- React
+- TypeScript
+- Vite
+- Electron (planned)
+- SQLite (planned)
+- OBS WebSocket
+- GSAP
