@@ -45,11 +45,18 @@ export async function getCurrentScene() {
   return response.currentProgramSceneName;
 }
 
-export async function getScenes() {
+type OBSScene = {
+  sceneIndex: number;
+  sceneName: string;
+  sceneUuid: string;
+};
+
+export async function getScenes(): Promise<OBSScene[]> {
   if (!connected) return [];
 
   const response = await obs.call("GetSceneList");
-  return response.scenes;
+
+  return response.scenes as OBSScene[];
 }
 
 export async function getRecordStatus() {
@@ -74,12 +81,40 @@ export async function setScene(scene: string) {
 
 export async function startRecording() {
   if (!connected) return;
+
   await obs.call("StartRecord");
 }
 
 export async function stopRecording() {
   if (!connected) return;
+
   await obs.call("StopRecord");
+}
+
+/* ---------- Event Listeners ---------- */
+
+export function onCurrentSceneChanged(
+  callback: (sceneName: string) => void
+) {
+  obs.on("CurrentProgramSceneChanged", (event) => {
+    callback(event.sceneName);
+  });
+}
+
+export function onRecordStateChanged(
+  callback: (active: boolean) => void
+) {
+  obs.on("RecordStateChanged", (event) => {
+    callback(event.outputActive);
+  });
+}
+
+export function onStreamStateChanged(
+  callback: (active: boolean) => void
+) {
+  obs.on("StreamStateChanged", (event) => {
+    callback(event.outputActive);
+  });
 }
 
 export default obs;
