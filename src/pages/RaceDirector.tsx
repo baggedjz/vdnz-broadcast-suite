@@ -2,6 +2,7 @@ import CurrentBattleCard from "../components/raceDirector/CurrentBattleCard";
 import BattleQueueCard from "../components/raceDirector/BattleQueueCard";
 import QuickActionsCard from "../components/raceDirector/QuickActionsCard";
 import ProgramPreviewCard from "../components/raceDirector/ProgramPreviewCard";
+import EventLogCard from "../components/raceDirector/EventLogCard";
 
 export default function RaceDirector() {
   return (
@@ -19,6 +20,10 @@ export default function RaceDirector() {
 
       <div className="grid grid-cols-12 gap-6">
 
+        <div className="col-span-12">
+    <EventLogCard />
+  </div>
+
         <div className="col-span-4">
           <CurrentBattleCard />
         </div>
@@ -34,6 +39,7 @@ export default function RaceDirector() {
         <div className="col-span-6">
           <QuickActionsCard />
         </div>
+        
 
       </div>
 

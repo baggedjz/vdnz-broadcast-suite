@@ -1,34 +1,67 @@
+import { useEffect, useState } from "react";
 import { Monitor } from "lucide-react";
-import { useOBSStore } from "../../store/obsStore";
+import { getProgramScreenshot } from "../../services/obs";
 
-export default function ProgramPreview() {
-  const { currentScene } = useOBSStore();
+export default function ProgramPreviewCard() {
+  const [image, setImage] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function updatePreview() {
+      const screenshot = await getProgramScreenshot();
+
+      if (screenshot) {
+        setImage(screenshot);
+      }
+    }
+
+    updatePreview();
+
+    const interval = setInterval(updatePreview, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
 
-      <h2 className="mb-6 text-xl font-bold text-cyan-400">
-        Program Output
-      </h2>
+      <div className="mb-5 flex items-center justify-between">
 
-      <div className="flex h-80 items-center justify-center rounded-xl border-2 border-dashed border-zinc-700 bg-black">
+        <h2 className="text-xl font-bold text-cyan-400">
+          Program Output
+        </h2>
 
-        <div className="text-center">
+        <span className="rounded-lg bg-green-500/20 px-3 py-1 text-sm font-semibold text-green-400">
+          LIVE
+        </span>
 
-          <Monitor
-            size={72}
-            className="mx-auto mb-5 text-cyan-400"
+      </div>
+
+      <div className="overflow-hidden rounded-xl border border-zinc-800 bg-black">
+
+        {image ? (
+          <img
+            src={image}
+            alt="OBS Program"
+            className="aspect-video w-full object-cover"
           />
+        ) : (
+          <div className="flex aspect-video items-center justify-center">
 
-          <p className="text-3xl font-bold text-white">
-            {currentScene || "No Scene"}
-          </p>
+            <div className="text-center">
 
-          <p className="mt-3 text-zinc-500">
-            Live OBS Program
-          </p>
+              <Monitor
+                className="mx-auto mb-4 text-cyan-400"
+                size={72}
+              />
 
-        </div>
+              <p className="text-lg text-zinc-400">
+                Waiting for OBS Preview...
+              </p>
+
+            </div>
+
+          </div>
+        )}
 
       </div>
 
