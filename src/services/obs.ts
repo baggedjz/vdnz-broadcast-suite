@@ -1,10 +1,11 @@
 import OBSWebSocket from "obs-websocket-js";
+import type { OBSScene } from "../types/OBS";
 
 const obs = new OBSWebSocket();
 
 let connected = false;
 
-export async function connectOBS() {
+export async function connectOBS(): Promise<boolean> {
   if (connected) return true;
 
   try {
@@ -14,15 +15,12 @@ export async function connectOBS() {
     );
 
     connected = true;
-
     console.log("✅ Connected to OBS");
 
     return true;
   } catch (error) {
     console.error("❌ Failed to connect to OBS", error);
-
     connected = false;
-
     return false;
   }
 }
@@ -38,37 +36,18 @@ export function isConnected() {
   return connected;
 }
 
-export async function getCurrentScene() {
+export async function getCurrentScene(): Promise<string | null> {
   if (!connected) return null;
 
   const response = await obs.call("GetCurrentProgramScene");
   return response.currentProgramSceneName;
 }
 
-type OBSScene = {
-  sceneIndex: number;
-  sceneName: string;
-  sceneUuid: string;
-};
-
 export async function getScenes(): Promise<OBSScene[]> {
   if (!connected) return [];
 
   const response = await obs.call("GetSceneList");
-
   return response.scenes as OBSScene[];
-}
-
-export async function getRecordStatus() {
-  if (!connected) return null;
-
-  return await obs.call("GetRecordStatus");
-}
-
-export async function getStreamStatus() {
-  if (!connected) return null;
-
-  return await obs.call("GetStreamStatus");
 }
 
 export async function setScene(scene: string) {
@@ -91,7 +70,25 @@ export async function stopRecording() {
   await obs.call("StopRecord");
 }
 
-/* ---------- Event Listeners ---------- */
+export async function getProgramScreenshot(): Promise<string | null> {
+  if (!connected) return null;
+
+  const scene = await getCurrentScene();
+
+  if (!scene) return null;
+
+  const response = await obs.call("GetSourceScreenshot", {
+    sourceName: scene,
+    imageFormat: "png",
+    imageWidth: 1280,
+    imageHeight: 720,
+    imageCompressionQuality: 80,
+  });
+
+  return response.imageData;
+}
+
+/* ---------- Events ---------- */
 
 export function onCurrentSceneChanged(
   callback: (sceneName: string) => void
