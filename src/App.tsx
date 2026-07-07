@@ -2,7 +2,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 
 import MainLayout from "./components/layout/MainLayout";
 
-import Dashboard from "./pages/Dashboard";
+import RaceDirector from "./pages/RaceDirector";
 import Drivers from "./pages/Drivers";
 import Battles from "./pages/Battles";
 import Brackets from "./pages/Brackets";
@@ -17,7 +17,7 @@ export default function App() {
   return (
     <Routes>
       <Route element={<MainLayout />}>
-        <Route path="/" element={<Dashboard />} />
+        <Route path="/" element={<RaceDirector />} />
         <Route path="/drivers" element={<Drivers />} />
         <Route path="/battles" element={<Battles />} />
         <Route path="/brackets" element={<Brackets />} />
