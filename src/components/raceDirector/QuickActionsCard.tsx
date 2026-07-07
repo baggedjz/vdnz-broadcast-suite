@@ -9,10 +9,13 @@ import {
 } from "lucide-react";
 
 import {
-  setScene,
-  startRecording,
-  stopRecording,
-} from "../../services/obs";
+  showVS,
+  showWinner,
+  showReplay,
+  showCommentary,
+  beginRecording,
+  endRecording,
+} from "../../services/eventEngine";
 
 import { useCompetitionStore } from "../../store/competitionStore";
 
@@ -29,7 +32,7 @@ export default function QuickActionsCard() {
       <div className="grid grid-cols-2 gap-4">
 
         <button
-          onClick={() => setScene("VS Overlay")}
+          onClick={showVS}
           className="rounded-xl bg-cyan-500 py-4 font-semibold text-black transition hover:bg-cyan-400"
         >
           <div className="flex items-center justify-center gap-2">
@@ -39,7 +42,7 @@ export default function QuickActionsCard() {
         </button>
 
         <button
-          onClick={() => setScene("Winner")}
+          onClick={showWinner}
           className="rounded-xl bg-green-600 py-4 font-semibold transition hover:bg-green-500"
         >
           <div className="flex items-center justify-center gap-2">
@@ -49,7 +52,7 @@ export default function QuickActionsCard() {
         </button>
 
         <button
-          onClick={() => setScene("Replay")}
+         onClick={showReplay}
           className="rounded-xl bg-purple-600 py-4 font-semibold transition hover:bg-purple-500"
         >
           <div className="flex items-center justify-center gap-2">
@@ -59,7 +62,7 @@ export default function QuickActionsCard() {
         </button>
 
         <button
-          onClick={() => setScene("Commentary")}
+          onClick={showCommentary}
           className="rounded-xl bg-orange-600 py-4 font-semibold transition hover:bg-orange-500"
         >
           <div className="flex items-center justify-center gap-2">
@@ -69,7 +72,7 @@ export default function QuickActionsCard() {
         </button>
 
         <button
-          onClick={startRecording}
+          onClick={beginRecording}
           className="rounded-xl bg-red-600 py-4 font-semibold transition hover:bg-red-500"
         >
           <div className="flex items-center justify-center gap-2">
@@ -79,7 +82,7 @@ export default function QuickActionsCard() {
         </button>
 
         <button
-          onClick={stopRecording}
+          onClick={endRecording}
           className="rounded-xl bg-zinc-700 py-4 font-semibold transition hover:bg-zinc-600"
         >
           <div className="flex items-center justify-center gap-2">
