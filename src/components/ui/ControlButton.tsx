@@ -1,41 +1,63 @@
 import type { ReactNode } from "react";
 
-type ControlButtonProps = {
-  children: ReactNode;
-  icon?: ReactNode;
-  onClick?: () => void;
-  variant?: "primary" | "secondary" | "success" | "danger";
-  disabled?: boolean;
+type Colour =
+  | "cyan"
+  | "green"
+  | "purple"
+  | "orange"
+  | "red"
+  | "zinc";
+
+const colours = {
+  cyan:
+    "bg-cyan-600 hover:bg-cyan-500",
+
+  green:
+    "bg-green-600 hover:bg-green-500",
+
+  purple:
+    "bg-purple-600 hover:bg-purple-500",
+
+  orange:
+    "bg-orange-600 hover:bg-orange-500",
+
+  red:
+    "bg-red-600 hover:bg-red-500",
+
+  zinc:
+    "bg-zinc-700 hover:bg-zinc-600",
 };
 
-const variants = {
-  primary:
-    "bg-cyan-500 hover:bg-cyan-400 text-black",
-  secondary:
-    "bg-zinc-800 hover:bg-zinc-700 text-white",
-  success:
-    "bg-green-600 hover:bg-green-500 text-white",
-  danger:
-    "bg-red-600 hover:bg-red-500 text-white",
+type Props = {
+  icon: ReactNode;
+  label: string;
+  shortcut?: string;
+  colour?: Colour;
+  onClick?: () => void;
 };
 
 export default function ControlButton({
-  children,
   icon,
+  label,
+  shortcut,
+  colour = "cyan",
   onClick,
-  variant = "primary",
-  disabled = false,
-}: ControlButtonProps) {
+}: Props) {
   return (
     <button
       onClick={onClick}
-      disabled={disabled}
-      className={`flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 font-semibold transition-all duration-200 ${
-        variants[variant]
-      } ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
+      className={`group flex w-full items-center justify-between rounded-xl px-5 py-4 font-semibold transition-all duration-200 ${colours[colour]}`}
     >
-      {icon}
-      {children}
+      <div className="flex items-center gap-3">
+        {icon}
+        {label}
+      </div>
+
+      {shortcut && (
+        <span className="rounded bg-black/20 px-2 py-1 text-xs">
+          {shortcut}
+        </span>
+      )}
     </button>
   );
 }
