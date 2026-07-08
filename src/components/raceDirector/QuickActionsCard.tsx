@@ -23,10 +23,12 @@ import {
 } from "../../services/eventEngine";
 
 import { useCompetitionStore } from "../../store/competitionStore";
+import { useBattleTimerStore } from "../../store/battleTimerStore";
 
 export default function QuickActionsCard() {
   const { nextBattle } = useCompetitionStore();
   const { addEvent } = useEventLogStore();
+const { start } = useBattleTimerStore();
 
   return (
     <Panel title="🎬 Broadcast Control">
@@ -134,9 +136,11 @@ export default function QuickActionsCard() {
             shortcut="SPACE"
             colour="cyan"
             onClick={() => {
-  nextBattle();
-  addEvent("Competition", "Advanced to next battle");
-}}
+           nextBattle();
+           start();
+           addEvent("Competition", "Battle Started");
+          }}
+        
           />
 
         </div>
