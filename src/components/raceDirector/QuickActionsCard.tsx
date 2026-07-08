@@ -1,12 +1,15 @@
 import {
-  Trophy,
-  SkipForward,
-  Radio,
-  Square,
   MonitorPlay,
+  Trophy,
   RotateCcw,
   Users,
+  Radio,
+  Square,
+  SkipForward,
 } from "lucide-react";
+
+import Panel from "../ui/Panel";
+import ControlButton from "../ui/ControlButton";
 
 import {
   showVS,
@@ -23,86 +26,99 @@ export default function QuickActionsCard() {
   const { nextBattle } = useCompetitionStore();
 
   return (
-    <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
+    <Panel title="🎬 Broadcast Control">
 
-      <h2 className="mb-6 text-xl font-bold text-cyan-400">
-        Broadcast Control
-      </h2>
+      <div className="space-y-6">
 
-      <div className="grid grid-cols-2 gap-4">
+        <div>
 
-        <button
-          onClick={showVS}
-          className="rounded-xl bg-cyan-500 py-4 font-semibold text-black transition hover:bg-cyan-400"
-        >
-          <div className="flex items-center justify-center gap-2">
-            <Users size={20} />
-            Driver VS
+          <p className="mb-3 text-xs uppercase tracking-[0.25em] text-zinc-500">
+            Program
+          </p>
+
+          <div className="space-y-3">
+
+            <ControlButton
+              icon={<Users size={20} />}
+              label="Driver Intro / VS Overlay"
+              shortcut="F1"
+              colour="cyan"
+              onClick={showVS}
+            />
+
+            <ControlButton
+              icon={<Trophy size={20} />}
+              label="Winner"
+              shortcut="F2"
+              colour="green"
+              onClick={showWinner}
+            />
+
+            <ControlButton
+              icon={<RotateCcw size={20} />}
+              label="Replay"
+              shortcut="F3"
+              colour="purple"
+              onClick={showReplay}
+            />
+
+            <ControlButton
+              icon={<MonitorPlay size={20} />}
+              label="Commentary"
+              shortcut="F4"
+              colour="orange"
+              onClick={showCommentary}
+            />
+
           </div>
-        </button>
 
-        <button
-          onClick={showWinner}
-          className="rounded-xl bg-green-600 py-4 font-semibold transition hover:bg-green-500"
-        >
-          <div className="flex items-center justify-center gap-2">
-            <Trophy size={20} />
-            Winner
-          </div>
-        </button>
+        </div>
 
-        <button
-         onClick={showReplay}
-          className="rounded-xl bg-purple-600 py-4 font-semibold transition hover:bg-purple-500"
-        >
-          <div className="flex items-center justify-center gap-2">
-            <RotateCcw size={20} />
-            Replay
-          </div>
-        </button>
+        <div className="border-t border-zinc-800 pt-6">
 
-        <button
-          onClick={showCommentary}
-          className="rounded-xl bg-orange-600 py-4 font-semibold transition hover:bg-orange-500"
-        >
-          <div className="flex items-center justify-center gap-2">
-            <MonitorPlay size={20} />
-            Commentary
-          </div>
-        </button>
+          <p className="mb-3 text-xs uppercase tracking-[0.25em] text-zinc-500">
+            Output
+          </p>
 
-        <button
-          onClick={beginRecording}
-          className="rounded-xl bg-red-600 py-4 font-semibold transition hover:bg-red-500"
-        >
-          <div className="flex items-center justify-center gap-2">
-            <Radio size={20} />
-            Start Record
-          </div>
-        </button>
+          <div className="space-y-3">
 
-        <button
-          onClick={endRecording}
-          className="rounded-xl bg-zinc-700 py-4 font-semibold transition hover:bg-zinc-600"
-        >
-          <div className="flex items-center justify-center gap-2">
-            <Square size={20} />
-            Stop Record
-          </div>
-        </button>
+            <ControlButton
+              icon={<Radio size={20} />}
+              label="Start Recording"
+              shortcut="F5"
+              colour="red"
+              onClick={beginRecording}
+            />
 
-        <button
-          onClick={nextBattle}
-          className="col-span-2 rounded-xl bg-cyan-700 py-4 font-semibold transition hover:bg-cyan-600"
-        >
-          <div className="flex items-center justify-center gap-2">
-            <SkipForward size={20} />
-            Next Battle
+            <ControlButton
+              icon={<Square size={20} />}
+              label="Stop Recording"
+              colour="zinc"
+              onClick={endRecording}
+            />
+
           </div>
-        </button>
+
+        </div>
+
+        <div className="border-t border-zinc-800 pt-6">
+
+          <p className="mb-3 text-xs uppercase tracking-[0.25em] text-zinc-500">
+            Event
+          </p>
+
+          <ControlButton
+            icon={<SkipForward size={20} />}
+            label="Next Battle"
+            shortcut="SPACE"
+            colour="cyan"
+            onClick={nextBattle}
+          />
+
+        </div>
 
       </div>
 
-    </div>
+    </Panel>
   );
 }
