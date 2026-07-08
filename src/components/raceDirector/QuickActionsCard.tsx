@@ -10,6 +10,8 @@ import {
 
 import Panel from "../ui/Panel";
 import ControlButton from "../ui/ControlButton";
+import { useEventLogStore } from "../../store/eventLogStore";
+
 
 import {
   showVS,
@@ -24,6 +26,7 @@ import { useCompetitionStore } from "../../store/competitionStore";
 
 export default function QuickActionsCard() {
   const { nextBattle } = useCompetitionStore();
+  const { addEvent } = useEventLogStore();
 
   return (
     <Panel title="🎬 Broadcast Control">
@@ -43,7 +46,10 @@ export default function QuickActionsCard() {
               label="Driver Intro / VS Overlay"
               shortcut="F1"
               colour="cyan"
-              onClick={showVS}
+              onClick={async () => {
+  await showVS();
+  addEvent("Broadcast", "Driver Intro / VS Overlay");
+}}
             />
 
             <ControlButton
@@ -51,7 +57,10 @@ export default function QuickActionsCard() {
               label="Winner"
               shortcut="F2"
               colour="green"
-              onClick={showWinner}
+              onClick={async () => {
+  await showWinner();
+  addEvent("Broadcast", "Winner scene activated");
+}}
             />
 
             <ControlButton
@@ -59,7 +68,10 @@ export default function QuickActionsCard() {
               label="Replay"
               shortcut="F3"
               colour="purple"
-              onClick={showReplay}
+              onClick={async () => {
+  await showReplay();
+  addEvent("Replay", "Replay activated");
+}}
             />
 
             <ControlButton
@@ -67,7 +79,10 @@ export default function QuickActionsCard() {
               label="Commentary"
               shortcut="F4"
               colour="orange"
-              onClick={showCommentary}
+              onClick={async () => {
+  await showCommentary();
+  addEvent("Broadcast", "Commentary scene activated");
+}}
             />
 
           </div>
@@ -87,14 +102,20 @@ export default function QuickActionsCard() {
               label="Start Recording"
               shortcut="F5"
               colour="red"
-              onClick={beginRecording}
+              onClick={async () => {
+  await beginRecording();
+  addEvent("Broadcast", "Recording started");
+}}
             />
 
             <ControlButton
               icon={<Square size={20} />}
               label="Stop Recording"
               colour="zinc"
-              onClick={endRecording}
+              onClick={async () => {
+  await endRecording();
+  addEvent("Broadcast", "Recording stopped");
+}}
             />
 
           </div>
@@ -112,7 +133,10 @@ export default function QuickActionsCard() {
             label="Next Battle"
             shortcut="SPACE"
             colour="cyan"
-            onClick={nextBattle}
+            onClick={() => {
+  nextBattle();
+  addEvent("Competition", "Advanced to next battle");
+}}
           />
 
         </div>

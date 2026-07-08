@@ -1,31 +1,46 @@
 import { create } from "zustand";
 
-export type EventLogEntry = {
+export type EventType =
+  | "OBS"
+  | "Broadcast"
+  | "Competition"
+  | "Judge"
+  | "Replay"
+  | "System";
+
+export interface EventLogItem {
   id: string;
   time: string;
+  type: EventType;
   message: string;
+}
+
+type EventLogStore = {
+  events: EventLogItem[];
+
+  addEvent: (type: EventType, message: string) => void;
+
+  clear: () => void;
 };
 
-type EventStore = {
-  logs: EventLogEntry[];
-  addLog: (message: string) => void;
-  clearLogs: () => void;
-};
+export const useEventLogStore = create<EventLogStore>((set) => ({
+  events: [],
 
-export const useEventStore = create<EventStore>((set) => ({
-  logs: [],
-
-  addLog: (message) =>
+  addEvent: (type, message) =>
     set((state) => ({
-      logs: [
+      events: [
         {
           id: crypto.randomUUID(),
           time: new Date().toLocaleTimeString(),
+          type,
           message,
         },
-        ...state.logs,
+        ...state.events,
       ],
     })),
 
-  clearLogs: () => set({ logs: [] }),
+  clear: () =>
+    set({
+      events: [],
+    }),
 }));

@@ -1,38 +1,41 @@
-import { ScrollText } from "lucide-react";
-import { useEventStore } from "../../store/eventLogStore";
+import Panel from "../ui/Panel";
+import { useEventLogStore } from "../../store/eventLogStore";
 
 export default function EventLogCard() {
-  const { logs } = useEventStore();
+  const { events } = useEventLogStore();
 
   return (
-    <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6 h-full">
-      <div className="mb-4 flex items-center gap-2">
-        <ScrollText className="text-cyan-400" />
-        <h2 className="text-xl font-bold text-cyan-400">
-          Event Log
-        </h2>
-      </div>
+    <Panel title="📝 Event Timeline" className="h-full">
+      <div className="space-y-3 overflow-y-auto">
 
-      <div className="space-y-2 max-h-64 overflow-y-auto">
-        {logs.length === 0 ? (
-          <p className="text-zinc-500">No events yet.</p>
+        {events.length === 0 ? (
+          <div className="flex h-40 items-center justify-center rounded-xl border border-dashed border-zinc-800 text-zinc-500">
+            No events yet
+          </div>
         ) : (
-          logs.map((log) => (
+          events.map((event) => (
             <div
-              key={log.id}
-              className="rounded-lg bg-zinc-950 p-3"
+              key={event.id}
+              className="flex items-start justify-between rounded-xl border border-zinc-800 bg-zinc-900 p-3"
             >
-              <div className="text-xs text-zinc-500">
-                {log.time}
+              <div>
+                <p className="text-sm font-semibold text-white">
+                  {event.message}
+                </p>
+
+                <p className="text-xs uppercase tracking-wider text-zinc-500">
+                  {event.type}
+                </p>
               </div>
 
-              <div className="text-sm">
-                {log.message}
-              </div>
+              <span className="text-xs font-medium text-cyan-400">
+                {event.time}
+              </span>
             </div>
           ))
         )}
+
       </div>
-    </div>
+    </Panel>
   );
 }
