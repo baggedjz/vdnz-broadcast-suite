@@ -8,6 +8,7 @@ import {
 
 import { useOBSStore } from "../../store/obsStore";
 import { useCompetitionStore } from "../../store/competitionStore";
+import { useEffect, useState } from "react";
 
 export default function TopStatusBar() {
   const {
@@ -19,11 +20,25 @@ export default function TopStatusBar() {
 
   const { competition } = useCompetitionStore();
 
-  const time = new Date().toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-  });
+  const [time, setTime] = useState("");
+
+useEffect(() => {
+  const updateClock = () => {
+    setTime(
+      new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      })
+    );
+  };
+
+  updateClock();
+
+  const interval = setInterval(updateClock, 1000);
+
+  return () => clearInterval(interval);
+}, []);
 
   return (
     <header className="flex h-16 items-center justify-between border-b border-zinc-800 bg-[#090909] px-6">
