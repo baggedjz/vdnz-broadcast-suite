@@ -3,31 +3,13 @@ import { Play, Square, RotateCcw } from "lucide-react";
 import Panel from "../ui/Panel";
 import ControlButton from "../ui/ControlButton";
 
-import { useBattleTimerStore } from "../../store/battleTimerStore";
-import { useCompetitionStore } from "../../store/competitionStore";
-import { useEventLogStore } from "../../store/eventLogStore";
+import {
+  startBattle,
+  finishBattle,
+  loadNextBattle,
+} from "../../services/eventEngine";
 
 export default function BattleControlCard() {
-  const { start, stop, reset } = useBattleTimerStore();
-  const { nextBattle } = useCompetitionStore();
-  const { addEvent } = useEventLogStore();
-
-  const startBattle = () => {
-    start();
-    addEvent("Competition", "Battle Started");
-  };
-
-  const finishBattle = () => {
-    stop();
-    addEvent("Competition", "Battle Finished");
-  };
-
-  const next = () => {
-    reset();
-    nextBattle();
-    addEvent("Competition", "Loaded Next Battle");
-  };
-
   return (
     <Panel title="🏁 Battle Control">
       <div className="space-y-3">
@@ -51,7 +33,7 @@ export default function BattleControlCard() {
           icon={<RotateCcw size={20} />}
           label="Load Next Battle"
           colour="cyan"
-          onClick={next}
+          onClick={loadNextBattle}
         />
 
       </div>
