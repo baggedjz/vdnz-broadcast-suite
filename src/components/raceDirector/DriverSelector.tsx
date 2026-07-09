@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { Driver } from "../modules/drivers/types/Driver";
+import type { Driver } from "../../modules/drivers/types/Driver";
 
 
 type BattleStore = {

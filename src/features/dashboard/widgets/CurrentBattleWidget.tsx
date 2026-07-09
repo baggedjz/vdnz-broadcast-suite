@@ -1,11 +1,10 @@
-import { drivers } from "../../../store/drivers";
 import { useBattleStore } from "../../../store/battleStore";
 
 export default function CurrentBattleWidget() {
   const { leadDriver, chaseDriver } = useBattleStore();
 
-  const lead = drivers.find((d) => d.id === leadDriver);
-  const chase = drivers.find((d) => d.id === chaseDriver);
+ const lead = leadDriver;
+const chase = chaseDriver;
 
   return (
     <div className="rounded-xl bg-zinc-900 border border-zinc-800 p-5 shadow-lg">
