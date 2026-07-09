@@ -1,5 +1,5 @@
 import { Flag, Users, Trophy } from "lucide-react";
-import { BBSCard, BBSBadge } from "@/components/ui";
+import { BBSCard, BBSBadge } from "../../../components/ui";
 
 export default function ActiveEventCard() {
   return (

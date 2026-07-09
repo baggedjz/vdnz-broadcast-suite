@@ -1,5 +1,5 @@
 import { Wifi, Database, Radio, Gamepad2 } from "lucide-react";
-import { BBSBadge, BBSCard } from "@/components/ui";
+import { BBSCard, BBSBadge } from "../../../components/ui";
 
 export default function ConnectionStatusBar() {
   return (

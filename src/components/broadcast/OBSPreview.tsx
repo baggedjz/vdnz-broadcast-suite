@@ -1,43 +1,30 @@
 import { MonitorPlay } from "lucide-react";
-
-import {
-  BBSCard,
-  BBSBadge,
-  BBSButton,
-} from "../ui";
-
+import { BBSCard, BBSBadge } from "../ui";
 import { useOBSStore } from "../../store/obsStore";
 
-
-export default function ProgramPreview() {
-
+export default function OBSPreview() {
   const {
     connected,
     currentScene,
     preview,
     recording,
     streaming,
-    updatePreview,
   } = useOBSStore();
-
 
   return (
     <BBSCard title="Program Output">
 
-      <div className="space-y-5">
+      <div className="space-y-4">
 
         <div className="aspect-video overflow-hidden rounded-xl bg-black">
 
           {preview ? (
-
             <img
               src={preview}
               alt="OBS Preview"
               className="h-full w-full object-cover"
             />
-
           ) : (
-
             <div className="flex h-full flex-col items-center justify-center text-zinc-500">
 
               <MonitorPlay
@@ -47,12 +34,11 @@ export default function ProgramPreview() {
 
               <p>
                 {connected
-                  ? "Waiting for OBS Preview..."
+                  ? "Waiting for Preview..."
                   : "OBS Offline"}
               </p>
 
             </div>
-
           )}
 
         </div>
@@ -70,7 +56,7 @@ export default function ProgramPreview() {
           <BBSBadge
             variant={recording ? "danger" : "info"}
           >
-            {recording ? "Recording" : "Idle"}
+            {recording ? "Recording" : "Not Recording"}
           </BBSBadge>
 
 
@@ -83,27 +69,12 @@ export default function ProgramPreview() {
         </div>
 
 
-        <div className="flex items-center justify-between">
+        <div className="text-sm text-zinc-400">
+          Current Scene:
 
-          <div>
-
-            <p className="text-xs uppercase tracking-widest text-zinc-500">
-              Scene
-            </p>
-
-            <p className="text-lg font-bold text-cyan-400">
-              {currentScene || "None"}
-            </p>
-
-          </div>
-
-
-          <BBSButton
-            onClick={updatePreview}
-          >
-            Refresh Preview
-          </BBSButton>
-
+          <span className="ml-2 font-bold text-cyan-400">
+            {currentScene || "None"}
+          </span>
         </div>
 
       </div>

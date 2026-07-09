@@ -1,5 +1,5 @@
 import { Cpu, HardDrive, Activity } from "lucide-react";
-import { BBSBadge, BBSCard } from "@/components/ui";
+import { BBSCard, BBSBadge } from "../../../components/ui";
 
 export default function SystemHealthCard() {
   return (

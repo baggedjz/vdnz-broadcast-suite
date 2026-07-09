@@ -6,7 +6,10 @@ import {
   Settings,
 } from "lucide-react";
 
-import { BBSButton, BBSCard } from "@/components/ui";
+import {
+  BBSButton,
+  BBSCard,
+} from "../../../components/ui";
 
 export default function QuickActionsCard() {
   return (

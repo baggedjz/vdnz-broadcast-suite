@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Monitor } from "lucide-react";
 import { getProgramScreenshot } from "../../services/obs";
+import OBSPreviewMonitor from "../../modules/broadcast/components/OBSPreviewMonitor";
 
 export default function ProgramPreviewCard() {
   const [image, setImage] = useState<string | null>(null);
@@ -43,7 +44,7 @@ export default function ProgramPreviewCard() {
           <div className="flex aspect-video items-center justify-center">
             <div className="text-center">
               <Monitor className="mx-auto mb-3 text-cyan-400" size={64} />
-              <p className="text-zinc-400">Waiting for OBS Preview...</p>
+              <OBSPreviewMonitor />
             </div>
           </div>
         )}
