@@ -1,6 +1,6 @@
 import { BBSCard } from "../../../components/ui";
 import { useEventStore } from "../store/eventStore";
-import EventCreateForm from "../components/EventCreateForm";
+import EventWizard from "../components/EventWizard";
 
 
 export default function EventManager() {
@@ -14,7 +14,7 @@ export default function EventManager() {
 
     <div className="space-y-6">
 
-      <EventCreateForm />
+      <EventWizard />
 
 
       <BBSCard title="Events">
