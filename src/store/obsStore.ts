@@ -5,10 +5,11 @@ import {
   connectOBS,
   disconnectOBS,
   getCurrentScene,
-  getProgramScreenshot,
   getScenes,
-  isConnected,
   setScene,
+  onCurrentSceneChanged,
+  onRecordStateChanged,
+  onStreamStateChanged,
 } from "../services/obs";
 
 type OBSStore = {
@@ -30,7 +31,6 @@ type OBSStore = {
   setRecording: (active: boolean) => void;
   setStreaming: (active: boolean) => void;
   setPreview: (image: string | null) => void;
-  setScenes: (scenes: OBSScene[]) => void;
 };
 
 export const useOBSStore = create<OBSStore>((set) => ({
@@ -42,19 +42,33 @@ export const useOBSStore = create<OBSStore>((set) => ({
   scenes: [],
 
   connect: async () => {
-    const ok = await connectOBS();
+    const success = await connectOBS();
 
-    if (!ok) return;
+    if (!success) {
+      set({ connected: false });
+      return;
+    }
 
-    const scene = await getCurrentScene();
+    const currentScene = await getCurrentScene();
     const scenes = await getScenes();
-    const preview = await getProgramScreenshot();
 
     set({
-      connected: isConnected(),
-      currentScene: scene ?? "",
+      connected: true,
+      currentScene: currentScene ?? "",
       scenes,
-      preview,
+    });
+
+    // Live updates from OBS
+    onCurrentSceneChanged((sceneName) => {
+      set({ currentScene: sceneName });
+    });
+
+    onRecordStateChanged((active) => {
+      set({ recording: active });
+    });
+
+    onStreamStateChanged((active) => {
+      set({ streaming: active });
     });
   },
 
@@ -64,27 +78,24 @@ export const useOBSStore = create<OBSStore>((set) => ({
     set({
       connected: false,
       currentScene: "",
+      recording: false,
+      streaming: false,
       preview: null,
       scenes: [],
     });
   },
 
   refresh: async () => {
-    if (!isConnected()) return;
-
-    const scene = await getCurrentScene();
-    const preview = await getProgramScreenshot();
+    const currentScene = await getCurrentScene();
+    const scenes = await getScenes();
 
     set({
-      connected: true,
-      currentScene: scene ?? "",
-      preview,
+      currentScene: currentScene ?? "",
+      scenes,
     });
   },
 
   loadScenes: async () => {
-    if (!isConnected()) return;
-
     const scenes = await getScenes();
 
     set({ scenes });
@@ -103,5 +114,4 @@ export const useOBSStore = create<OBSStore>((set) => ({
   setRecording: (recording) => set({ recording }),
   setStreaming: (streaming) => set({ streaming }),
   setPreview: (preview) => set({ preview }),
-  setScenes: (scenes) => set({ scenes }),
 }));
