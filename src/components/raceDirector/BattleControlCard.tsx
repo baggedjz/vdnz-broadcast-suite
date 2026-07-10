@@ -1,61 +1,241 @@
-import { Play, Square, RotateCcw } from "lucide-react";
+import { BBSButton, BBSCard } from "../ui";
 
-import Panel from "../ui/Panel";
-import ControlButton from "../ui/ControlButton";
+import { useRaceControlStore } from "../../store/raceControlStore";
+import { useBattleStore } from "../../store/battleStore";
 
 import {
-  startBattleWorkflow,
-  finishBattleWorkflow,
-} from "../../services/battleWorkflow";
+  startBattleBroadcast,
+  finishBattleBroadcast,
+  showWinnerBroadcast,
+} from "../../services/broadcastWorkflow";
 
-import { useBattleTimerStore } from "../../store/battleTimerStore";
-import { useCompetitionStore } from "../../store/competitionStore";
+import {
+  completeCurrentBattle,
+  loadNextBattle,
+} from "../../services/battleQueueWorkflow";
 
 
 export default function BattleControlCard() {
 
-  const { reset } = useBattleTimerStore();
 
-  const { nextBattle } = useCompetitionStore();
+  const {
+    status,
+    winner,
+    startBattle,
+    finishBattle,
+    setWinner,
+    resetBattle,
+  } = useRaceControlStore();
 
 
-  const loadNextBattle = () => {
-    reset();
-    nextBattle();
+
+  const {
+    leadDriver,
+    chaseDriver,
+  } = useBattleStore();
+
+
+
+
+  const handleStart = async () => {
+
+    startBattle();
+
+    await startBattleBroadcast();
+
   };
 
 
+
+
+  const handleFinish = async () => {
+
+    finishBattle();
+
+    await finishBattleBroadcast();
+
+  };
+
+
+
+
+  const handleLeadWinner = async () => {
+
+    setWinner("LEAD");
+
+
+    completeCurrentBattle(
+      "LEAD"
+    );
+
+
+    await showWinnerBroadcast(
+      leadDriver?.firstName ?? "Lead Driver"
+    );
+
+
+    loadNextBattle();
+
+  };
+
+
+
+
+  const handleChaseWinner = async () => {
+
+    setWinner("CHASE");
+
+
+    completeCurrentBattle(
+      "CHASE"
+    );
+
+
+    await showWinnerBroadcast(
+      chaseDriver?.firstName ?? "Chase Driver"
+    );
+
+
+    loadNextBattle();
+
+  };
+
+
+
+
   return (
-    <Panel title="🏁 Battle Control">
 
-      <div className="space-y-3">
-
-        <ControlButton
-          icon={<Play size={20} />}
-          label="Start Battle"
-          colour="green"
-          shortcut="SPACE"
-          onClick={startBattleWorkflow}
-        />
+    <BBSCard title="Battle Control">
 
 
-        <ControlButton
-          icon={<Square size={20} />}
-          label="Finish Battle"
-          colour="red"
-          onClick={finishBattleWorkflow}
-        />
+      <div className="space-y-6">
 
 
-        <ControlButton
-          icon={<RotateCcw size={20} />}
-          label="Load Next Battle"
-          colour="cyan"
-          onClick={loadNextBattle}
-        />
+
+        <div className="flex justify-between">
+
+          <span className="text-zinc-400">
+            Status
+          </span>
+
+
+          <span className="font-bold text-amber-400">
+            {status}
+          </span>
+
+
+        </div>
+
+
+
+
+
+        <div className="grid grid-cols-3 gap-3">
+
+
+          <BBSButton
+
+            disabled={!leadDriver || !chaseDriver}
+
+            onClick={handleStart}
+
+          >
+
+            🟢 Start Battle
+
+          </BBSButton>
+
+
+
+
+
+          <BBSButton
+
+            variant="secondary"
+
+            onClick={handleFinish}
+
+          >
+
+            🏁 Finish Battle
+
+          </BBSButton>
+
+
+
+
+
+          <BBSButton
+
+            onClick={resetBattle}
+
+          >
+
+            Reset
+
+          </BBSButton>
+
+
+
+        </div>
+
+
+
+
+
+
+        <div className="grid grid-cols-2 gap-3">
+
+
+
+          <BBSButton
+
+            variant={
+              winner === "LEAD"
+                ? "success"
+                : "secondary"
+            }
+
+            onClick={handleLeadWinner}
+
+          >
+
+            🏆 Lead Winner
+
+          </BBSButton>
+
+
+
+
+
+
+          <BBSButton
+
+            variant={
+              winner === "CHASE"
+                ? "success"
+                : "secondary"
+            }
+
+            onClick={handleChaseWinner}
+
+          >
+
+            🏆 Chase Winner
+
+          </BBSButton>
+
+
+
+
+        </div>
+
 
       </div>
 
-    </Panel>
+
+    </BBSCard>
+
   );
+
 }

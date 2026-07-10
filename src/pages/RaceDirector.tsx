@@ -1,39 +1,62 @@
 import CurrentBattleCard from "../components/raceDirector/CurrentBattleCard";
-import BattleQueueCard from "../components/raceDirector/BattleQueueCard";
+import BattleControlCard from "../components/raceDirector/BattleControlCard";
 import ProgramPreviewCard from "../components/raceDirector/ProgramPreviewCard";
-import QuickActionsCard from "../components/raceDirector/QuickActionsCard";
-import EventLogCard from "../components/raceDirector/EventLogCard";
+import SceneControls from "../components/raceDirector/SceneControls";
+import BattleQueueCard from "../components/raceDirector/BattleQueueCard";
+import GraphicsControlCard from "../components/broadcast/GraphicsControlCard";
+
 
 export default function RaceDirector() {
+
   return (
-    <div className="flex h-full flex-col gap-6">
 
-      {/* Workspace */}
-      <div className="grid flex-1 grid-cols-12 gap-6">
+    <div className="space-y-6">
 
-        {/* Left */}
-        <div className="col-span-3 flex flex-col gap-6">
-          <CurrentBattleCard />
-          <BattleQueueCard />
-        </div>
 
-        {/* Centre */}
-        <div className="col-span-6">
-          <ProgramPreviewCard />
-        </div>
+      <div>
 
-        {/* Right */}
-        <div className="col-span-3">
-          <QuickActionsCard />
-        </div>
+        <h1 className="text-4xl font-bold text-amber-500">
+          Race Director
+        </h1>
+
+        <p className="text-zinc-400">
+          Complete event control centre
+        </p>
 
       </div>
 
-      {/* Bottom */}
-      <div className="h-64">
-        <EventLogCard />
+
+
+      <CurrentBattleCard />
+
+
+
+      <BattleQueueCard />
+
+
+
+
+      <div className="grid grid-cols-2 gap-6">
+
+        <ProgramPreviewCard />
+
+        <SceneControls />
+
       </div>
+
+
+
+
+      <BattleControlCard />
+
+
+
+
+      <GraphicsControlCard />
+
 
     </div>
+
   );
+
 }

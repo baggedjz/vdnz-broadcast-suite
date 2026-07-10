@@ -1,148 +1,173 @@
-import CurrentBattlePanel from "../components/CurrentBattlePanel";
-import { useCompetitionStore } from "../store/competitionStore";
+import { BBSCard, BBSButton } from "../components/ui";
 
-import {
-  Clapperboard,
-  Gavel,
-  Trophy,
-  Play,
-  RotateCcw,
-  Monitor,
-  RefreshCw,
-  Settings,
-} from "lucide-react";
+import { useCompetitionStore } from "../store/competitionStore";
+import { useOBSStore } from "../store/obsStore";
+import { useSponsorBroadcastStore } from "../store/sponsorBroadcastStore";
+import { useReplayStore } from "../store/replayStore";
 
 export default function Dashboard() {
-  const { competition, battleQueue } = useCompetitionStore();
+  const { event, competition } = useCompetitionStore();
+
+  const {
+    connected,
+    recording,
+    streaming,
+  } = useOBSStore();
+
+  const { activeSponsor } =
+    useSponsorBroadcastStore();
+
+  const { markers } =
+    useReplayStore();
 
   return (
     <div className="space-y-6">
 
-      <h1 className="text-4xl font-bold text-cyan-400">
-        Race Director Workspace
-      </h1>
+      {/* Header */}
 
-      <div className="grid grid-cols-2 gap-6">
+      <div>
 
-        <CurrentBattlePanel />
+        <h1 className="text-4xl font-bold text-amber-500">
+          Dashboard
+        </h1>
 
-        {/* Broadcast */}
+        <p className="text-zinc-400">
+          VDNZ Broadcast Suite Mission Control
+        </p>
 
-        <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
+      </div>
 
-          <h2 className="mb-5 text-xl font-bold text-cyan-400">
-            Broadcast Status
-          </h2>
+      {/* Top Cards */}
+
+      <div className="grid grid-cols-4 gap-6">
+
+        <BBSCard title="Current Event">
+
+          <p className="text-2xl font-bold">
+            {event.name}
+          </p>
+
+          <p className="text-zinc-400">
+            {competition.stage}
+          </p>
+
+        </BBSCard>
+
+        <BBSCard title="OBS">
+
+          <p>
+            {connected ? "🟢 Connected" : "🔴 Offline"}
+          </p>
+
+          <p>
+            {recording ? "🔴 Recording" : "Idle"}
+          </p>
+
+          <p>
+            {streaming ? "🟢 Live" : "Offline"}
+          </p>
+
+        </BBSCard>
+
+        <BBSCard title="Replay">
+
+          <p className="text-3xl font-bold">
+            {markers.length}
+          </p>
+
+          <p className="text-zinc-400">
+            Replay Markers
+          </p>
+
+        </BBSCard>
+
+        <BBSCard title="Sponsor">
+
+          <p className="text-xl font-bold">
+            {activeSponsor || "None"}
+          </p>
+
+        </BBSCard>
+
+      </div>
+
+      {/* Main Area */}
+
+      <div className="grid grid-cols-3 gap-6">
+
+        <BBSCard title="Current Battle">
 
           <div className="space-y-3">
 
-            <div className="flex justify-between">
-              <span>OBS</span>
-              <span className="text-green-400">● Connected</span>
-            </div>
+            <p>Battle</p>
 
-            <div className="flex justify-between">
-              <span>Assetto Corsa</span>
-              <span className="text-red-400">● Offline</span>
-            </div>
+            <h2 className="text-2xl font-bold">
+              {competition.currentBattle} / {competition.totalBattles}
+            </h2>
 
-            <div className="flex justify-between">
-              <span>Overlay</span>
-              <span className="text-cyan-400">● Ready</span>
-            </div>
+            <p className="text-zinc-400">
+              {competition.stage}
+            </p>
 
           </div>
 
-        </div>
+        </BBSCard>
 
-        {/* Competition */}
+        <BBSCard title="Quick Actions">
 
-        <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
+          <div className="space-y-3">
 
-          <h2 className="mb-5 text-xl font-bold text-cyan-400">
-            Competition
-          </h2>
+            <BBSButton>
+              🏁 Race Director
+            </BBSButton>
 
-          <div className="space-y-4">
+            <BBSButton>
+              📺 Broadcast Director
+            </BBSButton>
 
-            <div className="flex justify-between">
-              <span>Stage</span>
-              <span className="font-bold text-cyan-400">
-                {competition.stage}
-              </span>
-            </div>
+            <BBSButton>
+              🎬 Replay Director
+            </BBSButton>
 
-            <div className="flex justify-between">
-              <span>Battle</span>
-              <span className="font-bold text-cyan-400">
-                {competition.currentBattle}
-              </span>
-            </div>
-
-            <div className="flex justify-between">
-              <span>Queue</span>
-              <span className="font-bold text-cyan-400">
-                {battleQueue.length}
-              </span>
-            </div>
+            <BBSButton>
+              🏆 Championship
+            </BBSButton>
 
           </div>
 
-        </div>
+        </BBSCard>
 
-        {/* Live Control Console */}
+        <BBSCard title="System Status">
 
-        <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
+          <div className="space-y-2">
 
-          <h2 className="mb-6 text-xl font-bold text-cyan-400">
-            Live Control Console
-          </h2>
+            <p>
+              OBS:
+              {" "}
+              {connected ? "🟢" : "🔴"}
+            </p>
 
-          <div className="grid grid-cols-4 gap-3">
+            <p>
+              Database:
+              {" "}
+              🟢
+            </p>
 
-            <button className="group rounded-xl border border-zinc-700 bg-zinc-950 p-4 hover:border-cyan-400 hover:bg-zinc-800">
-              <Clapperboard className="mx-auto mb-2 text-cyan-400 group-hover:scale-110 transition" size={28}/>
-              <p className="text-sm">Show VS</p>
-            </button>
+            <p>
+              Assetto:
+              {" "}
+              🟡
+            </p>
 
-            <button className="group rounded-xl border border-zinc-700 bg-zinc-950 p-4 hover:border-cyan-400 hover:bg-zinc-800">
-              <Gavel className="mx-auto mb-2 text-cyan-400 group-hover:scale-110 transition" size={28}/>
-              <p className="text-sm">Judging</p>
-            </button>
-
-            <button className="group rounded-xl border border-zinc-700 bg-zinc-950 p-4 hover:border-cyan-400 hover:bg-zinc-800">
-              <Trophy className="mx-auto mb-2 text-cyan-400 group-hover:scale-110 transition" size={28}/>
-              <p className="text-sm">Winner</p>
-            </button>
-
-            <button className="group rounded-xl border border-zinc-700 bg-zinc-950 p-4 hover:border-cyan-400 hover:bg-zinc-800">
-              <Play className="mx-auto mb-2 text-cyan-400 group-hover:scale-110 transition" size={28}/>
-              <p className="text-sm">Next</p>
-            </button>
-
-            <button className="group rounded-xl border border-zinc-700 bg-zinc-950 p-4 hover:border-cyan-400 hover:bg-zinc-800">
-              <RotateCcw className="mx-auto mb-2 text-cyan-400 group-hover:scale-110 transition" size={28}/>
-              <p className="text-sm">Replay</p>
-            </button>
-
-            <button className="group rounded-xl border border-zinc-700 bg-zinc-950 p-4 hover:border-cyan-400 hover:bg-zinc-800">
-              <Monitor className="mx-auto mb-2 text-cyan-400 group-hover:scale-110 transition" size={28}/>
-              <p className="text-sm">Overlay</p>
-            </button>
-
-            <button className="group rounded-xl border border-zinc-700 bg-zinc-950 p-4 hover:border-cyan-400 hover:bg-zinc-800">
-              <RefreshCw className="mx-auto mb-2 text-cyan-400 group-hover:scale-110 transition" size={28}/>
-              <p className="text-sm">Reset</p>
-            </button>
-
-            <button className="group rounded-xl border border-zinc-700 bg-zinc-950 p-4 hover:border-cyan-400 hover:bg-zinc-800">
-              <Settings className="mx-auto mb-2 text-cyan-400 group-hover:scale-110 transition" size={28}/>
-              <p className="text-sm">More</p>
-            </button>
+            <p>
+              Discord:
+              {" "}
+              ⚪
+            </p>
 
           </div>
 
-        </div>
+        </BBSCard>
 
       </div>
 

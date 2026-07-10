@@ -1,23 +1,51 @@
 import { create } from "zustand";
+
 import type { Competition, CompetitionStage } from "../types/Competition";
 import type { Battle } from "../types/Battle";
 
-type CompetitionStore = {
+export interface EventInfo {
+  id: string;
+  name: string;
+  venue: string;
+  season: string;
+}
+
+interface CompetitionStore {
+  event: EventInfo;
+
   competition: Competition;
+
   battleQueue: Battle[];
 
+  setEvent: (event: Partial<EventInfo>) => void;
+
   setStage: (stage: CompetitionStage) => void;
+
   setCurrentBattle: (battle: number) => void;
+
   setTotalBattles: (total: number) => void;
+
   setCurrentRun: (run: number) => void;
+
   setJudgesReady: (ready: boolean) => void;
 
   addBattle: (battle: Battle) => void;
-  nextBattle: () => void;
-  setBattleLive: (id: string) => void;
-};
 
-export const useCompetitionStore = create<CompetitionStore>((set) => ({
+  nextBattle: () => void;
+
+  setBattleLive: (id: string) => void;
+}
+
+export const useCompetitionStore =
+create<CompetitionStore>((set) => ({
+
+  event: {
+    id: "summer-slam-2026",
+    name: "Summer Slam 2026",
+    venue: "Virtual Drift NZ",
+    season: "2026",
+  },
+
   competition: {
     stage: "Top32",
     currentBattle: 1,
@@ -58,6 +86,14 @@ export const useCompetitionStore = create<CompetitionStore>((set) => ({
       status: "Queued",
     },
   ],
+
+  setEvent: (event) =>
+    set((state) => ({
+      event: {
+        ...state.event,
+        ...event,
+      },
+    })),
 
   setStage: (stage) =>
     set((state) => ({

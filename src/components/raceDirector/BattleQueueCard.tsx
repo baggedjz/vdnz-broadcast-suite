@@ -1,66 +1,122 @@
-import { useCompetitionStore } from "../../store/competitionStore";
+import { BBSButton, BBSCard } from "../ui";
+import { useBattleQueueStore } from "../../store/battleQueueStore";
+import { loadNextBattle } from "../../services/battleQueueWorkflow";
+
 
 export default function BattleQueueCard() {
-  const { battleQueue } = useCompetitionStore();
+
+
+  const {
+    battles,
+    currentBattle,
+  } = useBattleQueueStore();
+
+
 
   return (
-    <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
 
-      <div className="mb-6 flex items-center justify-between">
+    <BBSCard title="Battle Queue">
 
-        <h2 className="text-xl font-bold text-cyan-400">
-          Battle Queue
-        </h2>
 
-        <span className="rounded-lg bg-cyan-500/10 px-3 py-1 text-sm text-cyan-400">
-          {battleQueue.length} Battles
-        </span>
+      <div className="space-y-6">
 
-      </div>
 
-      <div className="space-y-3">
+        {currentBattle ? (
 
-        {battleQueue.map((battle, index) => (
+          <div className="rounded-xl bg-zinc-800 p-4">
 
-          <div
-            key={battle.id}
-            className={`rounded-xl border p-4 transition ${
-              battle.status === "Live"
-                ? "border-cyan-500 bg-cyan-500/10"
-                : "border-zinc-700 bg-zinc-950"
-            }`}
-          >
-            <div className="flex items-center justify-between">
+            <p className="text-sm text-zinc-400">
+              Current Battle
+            </p>
 
-              <div>
 
-                <p className="font-semibold">
-                  Battle {index + 1}
-                </p>
+            <h2 className="text-xl font-bold text-white">
 
-                <p className="text-sm text-zinc-400">
-                  {battle.leadDriverName} vs {battle.chaseDriverName}
-                </p>
+              #{currentBattle.leadDriver.number}
+              {" "}
+              {currentBattle.leadDriver.firstName}
+
+              {" VS "}
+
+              #{currentBattle.chaseDriver.number}
+              {" "}
+              {currentBattle.chaseDriver.firstName}
+
+            </h2>
+
+
+            <p className="text-amber-400">
+              {currentBattle.status}
+            </p>
+
+
+          </div>
+
+
+        ) : (
+
+          <p className="text-zinc-500">
+            No active battle.
+          </p>
+
+        )}
+
+
+
+
+        <div>
+
+          <h3 className="mb-3 font-bold text-white">
+            Upcoming Battles
+          </h3>
+
+
+          <div className="space-y-2">
+
+
+            {battles.map((battle) => (
+
+              <div
+                key={battle.id}
+                className="rounded-lg bg-zinc-800 p-3"
+              >
+
+                #{battle.leadDriver.number}
+                {" "}
+                {battle.leadDriver.firstName}
+
+                {" VS "}
+
+                #{battle.chaseDriver.number}
+                {" "}
+                {battle.chaseDriver.firstName}
+
 
               </div>
 
-              <span
-                className={`rounded-lg px-3 py-1 text-sm font-semibold ${
-                  battle.status === "Live"
-                    ? "bg-green-500/20 text-green-400"
-                    : "bg-zinc-800 text-zinc-400"
-                }`}
-              >
-                {battle.status}
-              </span>
+            ))}
 
-            </div>
+
           </div>
 
-        ))}
+
+        </div>
+
+
+
+
+        <BBSButton
+          onClick={() => loadNextBattle()}
+        >
+          Load Next Battle
+        </BBSButton>
+
 
       </div>
 
-    </div>
+
+    </BBSCard>
+
   );
+
 }
