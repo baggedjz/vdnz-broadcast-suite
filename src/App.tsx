@@ -2,7 +2,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 
 import MainLayout from "./components/layout/MainLayout";
 
-import RaceDirector from "./pages/RaceDirector";
+import Dashboard from "./pages/Dashboard";
 import BroadcastDirector from "./pages/BroadcastDirector";
 import ReplayDirector from "./pages/ReplayDirector";
 import Drivers from "./pages/Drivers";
@@ -21,7 +21,7 @@ export default function App() {
   return (
     <Routes>
       <Route element={<MainLayout />}>
-  <Route path="/" element={<RaceDirector />} />
+  <Route path="/" element={<Dashboard />} />
 
   <Route path="/broadcast-director" element={<BroadcastDirector />} />
   <Route path="/replay-director" element={<ReplayDirector />} />
