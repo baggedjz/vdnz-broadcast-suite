@@ -11,11 +11,14 @@ import Settings from "./pages/Settings";
 import Events from "./pages/Events";
 import Competition from "./pages/Competition";
 import Tournament from "./pages/Tournament";
+import BattleStageOverlay from "./overlays/BattleStageOverlay";
 
 export default function App() {
 
   return (
     <Routes>
+      <Route path="/overlay/stage" element={<BattleStageOverlay />} />
+
       <Route element={<MainLayout />}>
         <Route path="/" element={<RaceDirector />} />
         <Route path="/drivers" element={<Drivers />} />
