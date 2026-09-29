@@ -45,8 +45,12 @@ export default function QuickActionsCard() {
   const { currentEvent } = useEventStore();
 
   const triggerBattleStage = async (stage: BattleStage, label: string) => {
+    const eventConfigured = Boolean(
+      currentEvent.name || currentEvent.venue || currentEvent.series
+    );
+
     const ok = await showBattleStage(stage, {
-      round: currentEvent.round || 2,
+      round: eventConfigured ? currentEvent.round : 2,
       eventName:
         currentEvent.name || currentEvent.venue || "ESDA Barbagallo 2025",
       seriesName: currentEvent.series || "VDNZ PRO DEVELOPMENT",
