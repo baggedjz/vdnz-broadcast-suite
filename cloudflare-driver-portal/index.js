@@ -1,3 +1,4 @@
+import { HUB_LOGIN_HTML, HUB_MAIN_HTML } from "./hub-pages.js";
 // VDNZ PRO CHAMPIONSHIP / DRIVER PORTAL - staging-only Worker
 // No official Google Sheets writes, no Pro Development connections, no public secret endpoints.
 const enc=new TextEncoder();
@@ -84,15 +85,19 @@ async function handle(req,env){
  }
  if(path==="/hub"||path.startsWith("/hub/")){
   if(method!=="GET")return fail("Method not allowed",405);
-  if(path==="/hub/hub.css"||path==="/hub/login.js")return env.ASSETS.fetch(req);
-  if(path==="/hub/login"||path==="/hub/login.html"){
+  // Resolve hub/login and hub/index as direct HTML responses.
+  // NEVER send these routes through ASSETS.fetch: Cloudflare's HTML
+  // canonical redirects can be re-intercepted by this Worker.
+  if(["/hub","/hub/","/hub/index.html","/hub/login","/hub/login.html"].includes(path)){
    const current=await session(req,env);
-   if(current?.role==="staff")return Response.redirect(new URL("/hub/",url.origin),302);
-   return env.ASSETS.fetch(req);
+   const authorised=current?.role==="staff";
+   const isExplicitLogin=path==="/hub/login"||path==="/hub/login.html";
+   const page=authorised&&!isExplicitLogin?HUB_MAIN_HTML:HUB_LOGIN_HTML;
+   return new Response(page,{status:200,headers:{"Content-Type":"text/html; charset=utf-8","Cache-Control":"private, no-store, max-age=0","X-Content-Type-Options":"nosniff","X-Frame-Options":"DENY"}});
   }
+  if(path==="/hub/hub.css"||path==="/hub/login.js")return env.ASSETS.fetch(req);
   const staff=await session(req,env);
-  if(!staff||staff.role!=="staff")return Response.redirect(new URL("/hub/login",url.origin),302);
-  if(path==="/hub"||path==="/hub/")return env.ASSETS.fetch(req);
+  if(!staff||staff.role!=="staff")return fail("Staff session required",401);
   return env.ASSETS.fetch(req);
  }
  if(!path.startsWith("/api/"))return env.ASSETS.fetch(req);
