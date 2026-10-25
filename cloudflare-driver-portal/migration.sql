@@ -52,3 +52,14 @@ CREATE TABLE IF NOT EXISTS portal_groups (
 CREATE INDEX IF NOT EXISTS idx_portal_messages_user ON portal_messages(user_id,created_at);
 CREATE INDEX IF NOT EXISTS idx_portal_notifications_user ON portal_notifications(user_id,created_at);
 CREATE INDEX IF NOT EXISTS idx_portal_assets_current ON portal_assets(series,season,active,round,kind);
+
+-- Staging-only social drafts: no connection to public Facebook or Instagram.
+CREATE TABLE IF NOT EXISTS portal_social_drafts (
+ id TEXT PRIMARY KEY,
+ title TEXT NOT NULL,
+ body TEXT NOT NULL,
+ channels TEXT NOT NULL DEFAULT '',
+ status TEXT NOT NULL DEFAULT 'Draft',
+ created_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_portal_social_drafts_created ON portal_social_drafts(created_at);
