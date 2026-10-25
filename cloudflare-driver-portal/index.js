@@ -83,8 +83,15 @@ async function handle(req,env){
   return json({service:"VDNZ Pro Championship Driver Portal",environment:"staging",database:"connected",storage:"connected",accounts:t?.n||0,ok:true});
  }
  if(path==="/hub"||path.startsWith("/hub/")){
+  if(method!=="GET")return fail("Method not allowed",405);
+  if(path==="/hub/hub.css"||path==="/hub/login.js")return env.ASSETS.fetch(req);
+  if(path==="/hub/login"||path==="/hub/login.html"){
+   const current=await session(req,env);
+   if(current?.role==="staff")return Response.redirect(new URL("/hub/",url.origin),302);
+   return env.ASSETS.fetch(new Request(new URL("/hub/login.html",url.origin),req));
+  }
   const staff=await session(req,env);
-  if(!staff||staff.role!=="staff")return Response.redirect(new URL("/?staff=1",url.origin),302);
+  if(!staff||staff.role!=="staff")return Response.redirect(new URL("/hub/login",url.origin),302);
   if(path==="/hub"||path==="/hub/")return env.ASSETS.fetch(new Request(new URL("/hub/index.html",url.origin),req));
   return env.ASSETS.fetch(req);
  }
