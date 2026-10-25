@@ -1,4 +1,6 @@
 import { HUB_LOGIN_HTML, HUB_MAIN_HTML } from "./hub-pages.js";
+import { PRO_HTML } from "./pro-pages.js";
+import { proApi } from "./pro-api.js";
 // VDNZ PRO CHAMPIONSHIP / DRIVER PORTAL - staging-only Worker
 // No official Google Sheets writes, no Pro Development connections, no public secret endpoints.
 const enc=new TextEncoder();
@@ -83,6 +85,14 @@ async function handle(req,env){
   await env.BUCKET.list({limit:1});
   return json({service:"VDNZ Pro Championship Driver Portal",environment:"staging",database:"connected",storage:"connected",accounts:t?.n||0,ok:true});
  }
+ if(path==="/pro"||path.startsWith("/pro/")){
+  if(method!=="GET")return fail("Method not allowed",405);
+  if(["/pro/pro.js","/pro/pro.css","/pro/crew-workflows.js"].includes(path))return env.ASSETS.fetch(req);
+  if(path==="/pro"||path==="/pro/"||path==="/pro/commentary"||path==="/pro/judge"||path==="/pro/overlay"||path==="/pro/control/qualifying"||path==="/pro/control/battle"||path==="/pro/control/settings"){
+   return new Response(PRO_HTML,{status:200,headers:{"Content-Type":"text/html; charset=utf-8","Cache-Control":"no-store,private","X-Frame-Options":"DENY","X-Content-Type-Options":"nosniff"}});
+  }
+  return fail("Pro Championship page not found",404);
+ }
  if(path==="/hub"||path.startsWith("/hub/")){
   if(method!=="GET")return fail("Method not allowed",405);
   // Resolve hub/login and hub/index as direct HTML responses.
@@ -103,6 +113,7 @@ async function handle(req,env){
  if(!path.startsWith("/api/"))return env.ASSETS.fetch(req);
  if(method!=="GET"&&req.headers.get("origin")!==url.origin)return fail("Invalid request origin",403);
  let u=await session(req,env);
+ if(path.startsWith("/api/pro/"))return await proApi(req,env,u,path);
  if(path==="/api/me"&&method==="GET")return json({user:u});
  if(path==="/api/signup"&&method==="POST"){
   const b=await body(req),name=s(b.name,90),email=s(b.email,200).toLowerCase(),password=String(b.password||"");
