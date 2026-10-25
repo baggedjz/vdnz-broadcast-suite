@@ -45,3 +45,13 @@ CREATE TABLE IF NOT EXISTS portal_pro_audit(
 );
 CREATE INDEX IF NOT EXISTS portal_pro_scores_event ON portal_pro_scores(round,mode,stage,lead_id);
 CREATE INDEX IF NOT EXISTS portal_pro_audit_time ON portal_pro_audit(created_at);
+
+-- Judge review notes, internal to appointed Pro Championship judging staff.
+CREATE TABLE IF NOT EXISTS portal_pro_protest_notes (
+ id TEXT PRIMARY KEY,
+ message_id TEXT NOT NULL,
+ judge_role TEXT NOT NULL CHECK(judge_role IN ('judge1','judge2','judge3','head','staff')),
+ note TEXT NOT NULL,
+ created_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_pro_protest_notes_message ON portal_pro_protest_notes(message_id,created_at);
