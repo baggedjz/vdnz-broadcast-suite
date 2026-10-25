@@ -10,12 +10,14 @@ const hash=async x=>Array.from(new Uint8Array(await crypto.subtle.digest("SHA-25
 const same=(a,b)=>{a=String(a||"");b=String(b||"");let d=a.length^b.length;for(let i=0;i<Math.max(a.length,b.length);i++)d|=(a.charCodeAt(i)||0)^(b.charCodeAt(i)||0);return d===0;};
 const eventKey=s=>[s.round,s.mode,s.stage,s.run,s.lead_id,s.chase_id];
 async function access(req,env,staff){
- if(staff?.role==="staff")return "staff";
  const h=req.headers.get("Authorization")||"";
- if(!h.startsWith("Bearer "))return "";
- const k=h.slice(7);if(k.length<40||k.length>150)return "";
- const digest=await hash(k),rows=(await env.DB.prepare("SELECT role,token_hash FROM portal_pro_crew_keys").all()).results||[];
- return rows.find(x=>same(x.token_hash,digest))?.role||"";
+ // Explicit private crew link takes precedence over any organiser browser cookie.
+ if(h.startsWith("Bearer ")){
+  const k=h.slice(7);if(k.length<40||k.length>150)return "";
+  const digest=await hash(k),rows=(await env.DB.prepare("SELECT role,token_hash FROM portal_pro_crew_keys").all()).results||[];
+  return rows.find(x=>same(x.token_hash,digest))?.role||"";
+ }
+ return staff?.role==="staff"?"staff":"";
 }
 const state=env=>env.DB.prepare("SELECT * FROM portal_pro_state WHERE id=1").first();
 async function audit(env,who,action,detail){
