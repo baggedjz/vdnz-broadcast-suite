@@ -1,0 +1,27 @@
+{
+  "name": "vdnz-pro-championship-staging",
+  "main": "index.js",
+  "compatibility_date": "2026-10-25",
+  "workers_dev": true,
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "run_worker_first": true
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "vdnz-pro-championship-staging",
+      "database_id": "d4cf3b35-e42d-4d4a-927f-f1966931c93d"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "BUCKET",
+      "bucket_name": "vdnz-pro-championship-staging"
+    }
+  ],
+  "vars": {
+    "PORTAL_ENV": "staging"
+  }
+}
