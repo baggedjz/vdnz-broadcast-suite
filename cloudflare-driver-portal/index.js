@@ -184,6 +184,7 @@ async function handle(req,env){
   staffRequired(u);const b=await body(req),round=roundNo(b.round),status=s(b.status,20);
   if(!["Pending","Here","Not Here"].includes(status))return fail("Invalid attendance");
   await env.DB.prepare("INSERT INTO portal_attendance(round,user_id,status,updated_at) VALUES(?,?,?,?) ON CONFLICT(round,user_id) DO UPDATE SET status=excluded.status,updated_at=excluded.updated_at").bind(round,s(b.user_id,80),status,time()).run();
+  if(status==="Not Here")await env.DB.prepare("DELETE FROM portal_groups WHERE round=? AND user_id=?").bind(round,s(b.user_id,80)).run();
   return json({ok:true,workbookSync:"not-connected"});
  }
  if(path==="/api/admin/points"&&method==="POST"){
