@@ -15,18 +15,7 @@
  <button class="navbtn current" data-tab="overview">◧ <span>Overview</span></button>
  <div class="nav-section">COMPETITION</div>
  <button class="navbtn" data-tab="broadcast">◉ <span>Broadcast &amp; Crew</span></button>
- <details class="crew-menu"><summary>CREW &amp; PRODUCTION PAGES</summary>
-  <div class="crew-nav">
-   <a href="/pro/?view=qualifying">Qualifying Control</a>
-   <a href="/pro/?view=battle">Battle Control</a>
-   <a href="/pro/?view=commentary">Commentators</a>
-   <a href="/pro/?view=judge&amp;role=judge1">Judge 1</a>
-   <a href="/pro/?view=judge&amp;role=judge2">Judge 2</a>
-   <a href="/pro/?view=judge&amp;role=judge3">Judge 3</a>
-   <a href="/pro/?view=judge&amp;role=head">Head Judge</a>
-   <a href="/pro/?view=settings">Crew &amp; Broadcast Settings</a>
-   <a href="/pro/?view=overlay">Graphics Preview</a>
-  </div></details>
+
  <button class="navbtn" data-tab="groups">▦ <span>Qualifying Groups</span></button>
  <div class="nav-section">DRIVERS &amp; EVENTS</div>
  <button class="navbtn" data-tab="drivers">♙ <span>Drivers &amp; Roll Call</span></button>
@@ -61,40 +50,18 @@
  </section>
  <section id="tab-broadcast" class="tabpage" hidden>
   <div class="eyebrow">BROADCAST / PRODUCTION</div><h1>Broadcast Control</h1>
-  <p class="lead">Broadcast, commentator, judge and production access are managed here in one section. No other app sidebar is required to find staff links.</p>
+  <p class="lead">This section will use the same Pro Development judging, battle and commentary workflows for Pro Championship. The unapproved replacement has been withdrawn.</p>
   <div class="caution">The v8 Production Controller has OBS show-flow code but is not connected to this staging deployment or the official Pro Championship events. Do not use this dashboard for live OBS switching.</div>
   <div class="link-cards">
    <button class="external panel" data-open="groups"><div class="kicker">STAGING GROUP MANAGER</div><h2>Qualifying Queue</h2><p>Manage four balanced groups here using authorised staging attendance. Official score sync is not active.</p><span>Manage staging groups →</span></button>
    <a class="external panel" href="https://docs.google.com/spreadsheets/d/1KoAzDD08oZiTRu_dZ2QR1Z3kCI4GRD18GKXm7VXwBUI/edit" target="_blank" rel="noopener noreferrer"><div class="kicker">OFFICIAL GOOGLE SHEET</div><h2>Season Master</h2><p>View the official Pro Championship workbook directly. No automatic writes from this staging hub.</p><span>Open workbook ↗</span></a>
   </div>
-  <div class="caution">Staging Hub does not host Pro judging yet. Original v32 pages are available below; staff may also configure verified private crew links. Never share private judge keys publicly.</div>
-  
-  <article class="panel" id="pro-new-suite">
-   <div class="section-header"><h2>VDNZ Pro Championship — New Cloudflare Pages</h2><span class="tag">STAGING · REBUILT IN THIS SITE</span></div>
-   <p class="muted">These are the NEW integrated Pro Championship pages on this Cloudflare Worker, not old broadcast links. Judge and commentary screens require a private crew key from Crew Settings. The official workbook, OBS switching and live graphics are not yet connected.</p>
-   <div class="link-cards">
-    <a class="external panel" href="/pro/?view=qualifying"><div class="kicker">RACE CONTROL</div><h2>Qualifying Control</h2><p>Current driver, run and qualifying groups.</p><span>Open Qualifying →</span></a>
-    <a class="external panel" href="/pro/?view=battle"><div class="kicker">RACE CONTROL</div><h2>Battle Control</h2><p>Lead, chase, stage and battle run assignment.</p><span>Open Battles →</span></a>
-    <a class="external panel" href="/pro/?view=commentary"><div class="kicker">COMMENTATORS</div><h2>Commentary Desk</h2><p>Interviews, accept/decline replies, judge progress and driver profiles.</p><span>Open Commentary →</span></a>
-    <a class="external panel" href="/pro/?view=judge&amp;role=judge1"><div class="kicker">JUDGES</div><h2>Judge 1</h2><p>Private scorecard, protests and internal notes.</p><span>Open Judge 1 →</span></a>
-    <a class="external panel" href="/pro/?view=judge&amp;role=judge2"><div class="kicker">JUDGES</div><h2>Judge 2</h2><p>Private scorecard, protests and internal notes.</p><span>Open Judge 2 →</span></a>
-    <a class="external panel" href="/pro/?view=judge&amp;role=judge3"><div class="kicker">JUDGES</div><h2>Judge 3</h2><p>Private scorecard, protests and internal notes.</p><span>Open Judge 3 →</span></a>
-    <a class="external panel" href="/pro/?view=judge&amp;role=head"><div class="kicker">HEAD JUDGE</div><h2>Head Judge</h2><p>Head Judge votes and formal protest replies.</p><span>Open Head Judge →</span></a>
-    <a class="external panel" href="/pro/?view=settings"><div class="kicker">SETTINGS</div><h2>Private Crew Access</h2><p>Generate, copy or revoke crew links.</p><span>Open Settings →</span></a>
-    <a class="external panel" href="/pro/?view=overlay"><div class="kicker">GRAPHICS</div><h2>Overlay Preview</h2><p>Local staging preview only, not an OBS source.</p><span>Open Preview →</span></a>
-   </div>
+  <article class="panel" id="prodev-parity-status">
+    <div class="section-header"><h2>Judging, Commentary &amp; Broadcast</h2><span class="tag">PARITY REBUILD REQUIRED</span></div>
+    <p>The new custom judging system has been withdrawn because it does not match VDNZ Pro Development. The Pro Championship replacement must reuse the actual Pro Development judge, head judge, commentary, battle control and overlay workflows rather than invented scoring screens.</p>
+    <div class="caution">Judging and production links remain unavailable in this staging hub until the authentic Pro Development implementation has been ported, isolated and tested. No official score or bracket data is being changed here.</div>
+    <p class="muted">The existing Driver Portal, briefing, questions, protests and driver interview replies remain separate and available as staging features.</p>
   </article>
-  <h2>Private crew link overrides</h2>
-  <div id="crew-link-list" class="link-cards"></div>
-  <div class="panel">
-    <h2>Configure official Pro Championship crew links</h2>
-    <p class="muted">Officials can save HTTPS links here after the corresponding VDNZ Pro Championship service is deployed. Each saved link is visible only to logged-in staff.</p>
-    <form id="crew-form" class="form-grid">
-      <label>Role<select name="role" id="crew-role"><option value="commentary">Commentators</option><option value="judge1">Judge 1</option><option value="judge2">Judge 2</option><option value="judge3">Judge 3</option><option value="head">Head Judge</option><option value="producer">Production / Kieren</option><option value="broadcast">Broadcast Control</option></select></label>
-      <label>Verified Cloudflare URL<input name="url" id="crew-url" placeholder="https://vdnz-pro-championship-..." type="url" autocomplete="off"></label>
-      <div class="full"><button class="button primary">Save Link</button> <button type="button" id="crew-clear" class="button secondary">Remove Selected Link</button></div>
-    </form>
-  </div>
   <div class="panel"><h2>Known VDNZ services</h2>
    <div class="link-cards">
     <a class="external panel" href="https://media.virtualdriftnz.co.nz" target="_blank" rel="noopener noreferrer"><div class="kicker">VDNZ MEDIA</div><h2>Media Hub</h2><p>Existing Cloudflare-hosted media service.</p><span>Open Media Hub ↗</span></a>
