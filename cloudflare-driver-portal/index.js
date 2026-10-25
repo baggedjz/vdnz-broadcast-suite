@@ -82,6 +82,12 @@ async function handle(req,env){
   await env.BUCKET.list({limit:1});
   return json({service:"VDNZ Pro Championship Driver Portal",environment:"staging",database:"connected",storage:"connected",accounts:t?.n||0,ok:true});
  }
+ if(path==="/hub"||path.startsWith("/hub/")){
+  const staff=await session(req,env);
+  if(!staff||staff.role!=="staff")return Response.redirect(new URL("/?staff=1",url.origin),302);
+  if(path==="/hub"||path==="/hub/")return env.ASSETS.fetch(new Request(new URL("/hub/index.html",url.origin),req));
+  return env.ASSETS.fetch(req);
+ }
  if(!path.startsWith("/api/"))return env.ASSETS.fetch(req);
  if(method!=="GET"&&req.headers.get("origin")!==url.origin)return fail("Invalid request origin",403);
  let u=await session(req,env);
@@ -152,6 +158,18 @@ async function handle(req,env){
   if(row.file_key.startsWith("https://"))return Response.redirect(row.file_key,302);
   const obj=await env.BUCKET.get(row.file_key);if(!obj)return fail("File missing from staging storage",404);
   return new Response(obj.body,{headers:{"Content-Type":obj.httpMetadata?.contentType||"application/octet-stream","Content-Disposition":"attachment; filename=\""+row.file_name.replace(/[^\w .-]/g,"_")+"\"","Cache-Control":"private, no-store"}});
+ }
+ if(path==="/api/admin/social"&&method==="GET"){
+  staffRequired(u);
+  const result=await env.DB.prepare("SELECT id,title,body,channels,status,created_at FROM portal_social_drafts ORDER BY created_at DESC LIMIT 100").all();
+  return json({drafts:result.results||[],publishing:"not-connected"});
+ }
+ if(path==="/api/admin/social"&&method==="POST"){
+  staffRequired(u);const b=await body(req),title=s(b.title,160),post=s(b.body,8000),channels=s(b.channels,200);
+  if(!title||!post)return fail("Draft title and post text are required");
+  const id=uid();
+  await env.DB.prepare("INSERT INTO portal_social_drafts(id,title,body,channels,status,created_at) VALUES(?,?,?,?,'Draft',?)").bind(id,title,post,channels,time()).run();
+  return json({ok:true,id,status:"Draft",published:false},201);
  }
  if(path==="/api/admin/dashboard"&&method==="GET"){
   staffRequired(u);
