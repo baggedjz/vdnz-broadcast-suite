@@ -96,7 +96,7 @@ export async function proApi(req,env,staff,path){
   const bytes=crypto.getRandomValues(new Uint8Array(32)),token=Array.from(bytes,x=>x.toString(16).padStart(2,"0")).join("");
   await env.DB.prepare("INSERT INTO portal_pro_crew_keys(role,token_hash,created_at) VALUES(?,?,?) ON CONFLICT(role) DO UPDATE SET token_hash=excluded.token_hash,created_at=excluded.created_at").bind(who,await hash(token),now()).run();
   await audit(env,role,"crew.rotate",{role:who});
-  const url=new URL(who==="commentary"?"/pro/commentary":"/pro/judge?role="+who,req.url);
+  const url=new URL(who==="commentary"?"/pro/?view=commentary":"/pro/?view=judge&role="+who,req.url);
   url.hash="key="+encodeURIComponent(token);
   return json({ok:true,role:who,url:url.toString(),note:"Private link shown once. Regenerating revokes the previous key."});
  }
