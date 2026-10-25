@@ -10,18 +10,21 @@
 </header>
 <div class="staging-banner">STAGING WORKSPACE · The official championship workbook, OBS relay and social publishing are not connected to this hub. Pro Development is untouched.</div>
 <div class="shell">
- <nav class="nav" aria-label="Main Hub navigation"><div class="nav-title">VDNZ MAIN HUB</div>
+ <nav class="nav" aria-label="Main Hub navigation">
+ <div class="nav-title">VDNZ MAIN HUB</div>
  <button class="navbtn current" data-tab="overview">◧ <span>Overview</span></button>
- <button class="navbtn" data-tab="broadcast">◉ <span>Broadcast</span></button>
- <button class="navbtn" data-tab="crew">⌁ <span>Commentators &amp; Judges</span></button>
- <button class="navbtn" data-tab="drivers">♙ <span>Drivers</span></button>
- <button class="navbtn" data-tab="briefing">☰ <span>Briefing</span></button>
+ <div class="nav-section">COMPETITION</div>
+ <button class="navbtn" data-tab="broadcast">◉ <span>Broadcast &amp; Crew</span></button>
  <button class="navbtn" data-tab="groups">▦ <span>Qualifying Groups</span></button>
- <button class="navbtn" data-tab="requests">✎ <span>Protests & Questions</span></button>
- <button class="navbtn" data-tab="interviews">◎ <span>Interviews & Alerts</span></button>
- <button class="navbtn" data-tab="media">▤ <span>Media Hub & Downloads</span></button>
+ <div class="nav-section">DRIVERS &amp; EVENTS</div>
+ <button class="navbtn" data-tab="drivers">♙ <span>Drivers &amp; Roll Call</span></button>
+ <button class="navbtn" data-tab="briefing">☰ <span>Briefing</span></button>
+ <button class="navbtn" data-tab="requests">✎ <span>Protests &amp; Questions</span></button>
+ <button class="navbtn" data-tab="interviews">◎ <span>Interviews &amp; Alerts</span></button>
+ <div class="nav-section">MEDIA &amp; ADMIN</div>
+ <button class="navbtn" data-tab="media">▤ <span>Media &amp; Downloads</span></button>
  <button class="navbtn" data-tab="socials">↗ <span>Socials</span></button>
- <button class="navbtn" data-tab="setup">⚙ <span>Setup & Status</span></button>
+ <button class="navbtn" data-tab="setup">⚙ <span>Setup &amp; Status</span></button>
  <div class="nav-foot">VDNZ · Pro Championship only<br><span>Separate from Pro Development</span></div>
  </nav>
  <main class="workspace">
@@ -46,18 +49,12 @@
  </section>
  <section id="tab-broadcast" class="tabpage" hidden>
   <div class="eyebrow">BROADCAST / PRODUCTION</div><h1>Broadcast Control</h1>
-  <p class="lead">Existing production systems remain separate. We will not replace working judging or broadcast functions with mock controls.</p>
+  <p class="lead">Broadcast, commentator, judge and production access are managed here in one section. No other app sidebar is required to find staff links.</p>
   <div class="caution">The v8 Production Controller has OBS show-flow code but is not connected to this staging deployment or the official Pro Championship events. Do not use this dashboard for live OBS switching.</div>
   <div class="link-cards">
-   <button class="external panel" data-open="crew"><div class="kicker">PRO CHAMPIONSHIP STAFF</div><h2>Commentators &amp; Judges</h2><p>Official crew links with separate private URLs for judges, commentators and production. Unconfigured links will not be shown as working.</p><span>Open Staff Links →</span></button>
    <button class="external panel" data-open="groups"><div class="kicker">STAGING GROUP MANAGER</div><h2>Qualifying Queue</h2><p>Manage four balanced groups here using authorised staging attendance. Official score sync is not active.</p><span>Manage staging groups →</span></button>
    <a class="external panel" href="https://docs.google.com/spreadsheets/d/1KoAzDD08oZiTRu_dZ2QR1Z3kCI4GRD18GKXm7VXwBUI/edit" target="_blank" rel="noopener noreferrer"><div class="kicker">OFFICIAL GOOGLE SHEET</div><h2>Season Master</h2><p>View the official Pro Championship workbook directly. No automatic writes from this staging hub.</p><span>Open workbook ↗</span></a>
   </div>
-  <article class="panel"><h2>Production Integration Checklist</h2><div class="stack spaced"><p>☐ OBS outbound relay connected and tested off-air</p><p>☐ Judge locks and automatic scene return verified</p><p>☐ Commentator cue and access handover verified</p><p>☐ Official battle results and bracket feeds connected</p><p>☐ Intro, sponsor playlist and transition safety tested</p><p>☐ Media Hub graphics tested without bleed-through</p></div></article>
- </section>
- <section id="tab-crew" class="tabpage" hidden>
-  <div class="eyebrow">STAFF ACCESS / PRO CHAMPIONSHIP</div><h1>Commentators &amp; Judges</h1>
-  <p class="lead">A central place for private Pro Championship crew URLs. Each judge must receive their own official link; these are not shared Driver Portal links.</p>
   <div class="caution"><strong>Cloudflare integration status:</strong> The production judge, commentator and broadcast services have not been migrated into this staging Worker. Only enter verified Pro Championship links. Never use BBS or Pro Development URLs.</div>
   <div id="crew-link-list" class="link-cards"></div>
   <div class="panel">
@@ -76,6 +73,8 @@
     <a class="external panel" href="https://docs.google.com/spreadsheets/d/1KoAzDD08oZiTRu_dZ2QR1Z3kCI4GRD18GKXm7VXwBUI/edit" target="_blank" rel="noopener noreferrer"><div class="kicker">PRO CHAMPIONSHIP</div><h2>Official Season Master</h2><p>Read the existing workbook. Staging doesn't write scoring or X marks.</p><span>Open workbook ↗</span></a>
    </div>
   </div>
+
+  <article class="panel"><h2>Production Integration Checklist</h2><div class="stack spaced"><p>☐ OBS outbound relay connected and tested off-air</p><p>☐ Judge locks and automatic scene return verified</p><p>☐ Commentator cue and access handover verified</p><p>☐ Official battle results and bracket feeds connected</p><p>☐ Intro, sponsor playlist and transition safety tested</p><p>☐ Media Hub graphics tested without bleed-through</p></div></article>
  </section>
  <section id="tab-drivers" class="tabpage" hidden>
   <div class="eyebrow">DRIVERS / REGISTRATION</div><h1>Drivers</h1><p class="lead">Approve registrations, view profile identities and manage round-by-round briefing attendance.</p>
