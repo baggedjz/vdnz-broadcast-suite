@@ -189,7 +189,7 @@ async function handle(req,env){
  if(path==="/api/admin/points"&&method==="POST"){
   staffRequired(u);const b=await body(req),points=Number(b.points);
   if(!Number.isSafeInteger(points)||points<0||points>100000)return fail("Invalid points");
-  await env.DB.prepare("INSERT INTO portal_points(user_id,points) VALUES(?,?) ON CONFLICT(user_id DO UPDATE SET points=excluded.points").bind(s(b.user_id,80),points).run();
+  await env.DB.prepare("INSERT INTO portal_points(user_id,points) VALUES(?,?) ON CONFLICT(user_id) DO UPDATE SET points=excluded.points").bind(s(b.user_id,80),points).run();
   return json({ok:true});
  }
  if(path==="/api/admin/groups"&&method==="POST"){
