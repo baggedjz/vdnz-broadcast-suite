@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en-NZ">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#090a0d">
+<meta name="robots" content="noindex,nofollow">
+<title>VDNZ Main Hub — Officials Login</title>
+<link rel="stylesheet" href="/hub/hub.css">
+<style>
+.loginpage{min-height:calc(100vh - 135px);display:flex;align-items:center;justify-content:center;padding:3rem 1rem;background:radial-gradient(ellipse at 50% 0%,#44321c35,transparent 60%)}
+.loginpanel{width:100%;max-width:465px;padding:2rem;background:#181a20;border:1px solid #383a40;border-top:3px solid #d6a04a;border-radius:7px;box-shadow:0 25px 75px #0009}
+.loginpanel h1{font-size:2rem;margin:.4rem 0 .8rem}
+.loginpanel p{color:#b0b3ba;line-height:1.6}
+.loginpanel label{font-size:.83rem;margin:1.6rem 0 1rem}
+.loginpanel input{font-size:1rem;min-height:50px}
+.loginpanel .button{width:100%;font-size:1rem;min-height:48px}
+.loginerror{background:#3c2324;color:#f6bdbd;padding:.75rem;border-left:3px solid #d87e7e;display:none;margin:.8rem 0}
+.login-note{font-size:.75rem;color:#979ba5;margin-top:1.5rem;text-align:center}
+</style>
+</head>
+<body>
+<header class="masthead">
+<div class="mastlogo"><span class="vdnz">VDNZ</span><span class="brand-description">VIRTUAL DRIFT NEW ZEALAND<br><b>MAIN HUB · PRO CHAMPIONSHIP</b></span></div>
+<span class="mode">STAFF <b>STAGING</b></span>
+</header>
+<div class="staging-banner">CLOUDFLARE STAGING · Official Pro Development systems remain separate</div>
+<main class="loginpage"><section class="loginpanel">
+<div class="eyebrow">VDNZ · OFFICIALS ACCESS</div>
+<h1>Main Hub Login<span class="gold">.</span></h1>
+<p>Sign in to the Pro Championship operations hub, including broadcast navigation, driver management, briefing, groups, media and social drafts.</p>
+<form id="login-form">
+<label>Officials password<input id="password" type="password" name="password" autocomplete="current-password" required autofocus minlength="16"></label>
+<div id="error" class="loginerror" role="alert"></div>
+<button id="submit" class="button primary" type="submit">Open Main Hub</button>
+</form>
+<div class="login-note">This is the Main Hub staff login — not the Driver Portal.</div>
+</section></main>
+<script src="/hub/login.js" defer></script>
+</body></html>
