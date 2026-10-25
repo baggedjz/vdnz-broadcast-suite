@@ -88,11 +88,11 @@ async function handle(req,env){
   if(path==="/hub/login"||path==="/hub/login.html"){
    const current=await session(req,env);
    if(current?.role==="staff")return Response.redirect(new URL("/hub/",url.origin),302);
-   return env.ASSETS.fetch(new Request(new URL("/hub/login.html",url.origin),req));
+   return env.ASSETS.fetch(req);
   }
   const staff=await session(req,env);
   if(!staff||staff.role!=="staff")return Response.redirect(new URL("/hub/login",url.origin),302);
-  if(path==="/hub"||path==="/hub/")return env.ASSETS.fetch(new Request(new URL("/hub/index.html",url.origin),req));
+  if(path==="/hub"||path==="/hub/")return env.ASSETS.fetch(req);
   return env.ASSETS.fetch(req);
  }
  if(!path.startsWith("/api/"))return env.ASSETS.fetch(req);
