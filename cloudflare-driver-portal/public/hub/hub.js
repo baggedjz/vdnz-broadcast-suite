@@ -128,33 +128,6 @@ function renderRecipients(d){
   select.value=Array.from(select.options).some(x=>x.value===old)?old:"all";
  }
 }
-const crewRoles=[["commentary","Commentators"],["judge1","Judge 1"],["judge2","Judge 2"],["judge3","Judge 3"],["head","Head Judge"],["producer","Production / Kieren"],["broadcast","Broadcast Control"]];
-let storedCrewLinks=[];
-async function loadCrew(){
- const response=await api("/api/admin/crew");
- storedCrewLinks=response.links||[];
- const parent=$("crew-link-list");clear(parent);
- for(const [role,name] of crewRoles){
-  const record=storedCrewLinks.find(x=>x.role===role);
-  const card=txt("article","","panel external");
-  add(card,txt("div",record?"VERIFIED URL SAVED":"NOT CONNECTED","kicker"),txt("h2",name));
-  if(record){
-   const status=txt("p","Staff link configured. Click to open it in a new tab. Keep unique judge links private.","muted");
-   const url=new URL(record.url);
-   const anchor=txt("a","Open "+name+" ↗","button primary small");
-   anchor.href=url.href;anchor.target="_blank";anchor.rel="noopener noreferrer";
-   const copy=button("Copy private link",async()=>{
-    await navigator.clipboard.writeText(url.href);msg(name+" link copied — share only with the intended crew member");
-   });
-   add(card,status,anchor,copy);
-  }else{
-   add(card,txt("p","No Cloudflare Pro Championship crew service URL has been configured for this role.","muted"));
-  }
-  parent.append(card);
- }
- const current=storedCrewLinks.find(x=>x.role===$("crew-role").value);
- $("crew-url").value=current?.url||"";
-}
 async function loadSocial(){
  const r=await api("/api/admin/social");
  const target=$("social-list");clear(target);
@@ -187,16 +160,6 @@ $all("[data-tab]").forEach(b=>b.onclick=()=>go(b.dataset.tab));
 $all("[data-open]").forEach(b=>b.onclick=()=>go(b.dataset.open));
 $("refresh-drivers").onclick=()=>load().then(()=>msg("Driver list updated")).catch(e=>msg(e.message,true));
 $("health-refresh").onclick=loadHealth;
-$("crew-role").addEventListener("change",()=>{
- const entry=storedCrewLinks.find(x=>x.role===$("crew-role").value);
- $("crew-url").value=entry?.url||"";
-});
-$("crew-clear").onclick=async()=>{
- try{
-  await api("/api/admin/crew",{role:$("crew-role").value,url:""});
-  msg("Selected link removed");await loadCrew();
- }catch(e){msg(e.message,true);}
-};
 $("logout").onclick=async()=>{await api("/api/logout",{});location.assign("/hub/login")};
 send("round-form","/api/admin/round",null,load);
 send("groups-form","/api/admin/groups",f=>({round:Number(val(f,"round")),order:val(f,"order"),confirmOverwrite:f.elements.confirmOverwrite.checked}),load);
@@ -204,11 +167,10 @@ send("invite-form","/api/admin/invite",null,load);
 send("notify-form","/api/admin/notify",null,load);
 send("asset-form","/api/admin/asset",null,load);
 send("social-form","/api/admin/social",f=>({title:val(f,"title"),body:val(f,"body"),channels:val(f,"channels")}),async()=>{$("social-form").reset();await loadSocial()});
-send("crew-form","/api/admin/crew",f=>({role:val(f,"role"),url:val(f,"url")}),loadCrew);
 window.addEventListener("hashchange",()=>go(location.hash.slice(1)));
 (async()=>{try{
  await check();
  go(location.hash.slice(1)||"overview");
- await Promise.all([load(),loadSocial(),loadHealth(),loadCrew()]);
+ await Promise.all([load(),loadSocial(),loadHealth()]);
 }catch(e){if(!String(e.message).includes("Staff session"))msg(e.message,true)}})();
 setInterval(()=>load().catch(()=>{}),60000);
