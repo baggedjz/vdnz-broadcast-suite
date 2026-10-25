@@ -22,7 +22,7 @@ async function api(path,body){
 }
 async function check(){
  const me=await api("/api/me");
- if(!me.user||me.user.role!=="staff"){location.replace("/?staff=1");throw Error("Staff session required");}
+ if(!me.user||me.user.role!=="staff"){location.replace("/hub/login");throw Error("Staff session required");}
 }
 function go(page){
  active=page;
@@ -152,7 +152,7 @@ $all("[data-tab]").forEach(b=>b.onclick=()=>go(b.dataset.tab));
 $all("[data-open]").forEach(b=>b.onclick=()=>go(b.dataset.open));
 $("refresh-drivers").onclick=()=>load().then(()=>msg("Driver list updated")).catch(e=>msg(e.message,true));
 $("health-refresh").onclick=loadHealth;
-$("logout").onclick=async()=>{await api("/api/logout",{});location.assign("/?staff=1")};
+$("logout").onclick=async()=>{await api("/api/logout",{});location.assign("/hub/login")};
 send("round-form","/api/admin/round",null,load);
 send("groups-form","/api/admin/groups",f=>({round:Number(val(f,"round")),order:val(f,"order"),confirmOverwrite:f.elements.confirmOverwrite.checked}),load);
 send("invite-form","/api/admin/invite",null,load);
