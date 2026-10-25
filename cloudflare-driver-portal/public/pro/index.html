@@ -97,6 +97,10 @@
       </div>
       <div class="panel"><h2>Judging Status</h2><div id="judge-locked" class="judgegrid"></div><h2>Current Run</h2><div id="judge-context" class="stack"></div><hr><h2>Staff Chat</h2><div id="judge-chat" class="chat"></div><form id="judge-chat-form" class="inline"><input name="message" placeholder="Message staff…" maxlength="500" required><button>Send</button></form></div>
      </div>
+    <div class="panel"><div class="inline"><h2>Driver Protests &amp; Questions</h2><span class="tag">PRO CHAMPIONSHIP ONLY</span></div>
+      <p>Review submitted protests and questions. Judges add private notes; only Head Judge or Officials can send a formal reply to the driver.</p>
+      <div id="protests-list" class="stack"></div>
+    </div>
    </section>
    <section id="commentary" hidden>
     <div class="columns">
@@ -109,10 +113,26 @@
      <div class="panel"><h2>Qualifying Order</h2><div id="commentary-groups" class="groups"></div></div>
      <div class="panel"><h2>Championship Snapshot</h2><div id="commentary-standings" class="stack"></div><p class="muted">Staging Driver Portal points only. Official series standings integration is pending.</p></div>
     </div>
+
+    <div class="columns">
+     <div class="panel"><h2>Invite a Driver for Interview</h2>
+       <p>Drivers receive the invitation through their own Driver Portal and can Accept or Decline.</p>
+       <form id="interview-form" class="stack">
+         <label>Driver<select id="interview-driver" required><option value="">Select an approved driver</option></select></label>
+         <label>Invitation message<textarea id="interview-message" rows="4" required placeholder="Join the commentary booth for a post-battle interview…"></textarea></label>
+         <button class="primary" type="submit">Send Interview Invitation</button>
+       </form>
+       <h2>Drivers Volunteering</h2><div id="interview-volunteers" class="stack"></div>
+     </div>
+     <div class="panel"><h2>Interview Invitations &amp; Replies</h2>
+       <p>Live staging responses: Pending, Accepted or Declined.</p>
+       <div id="interviews-list" class="stack"></div>
+     </div>
+    </div>
    </section>
    <section id="overlay" hidden><div class="panel"><h2>OBS Graphics Preview</h2><p>Static staging preview, never an on-air source. This page does not contain the final approved VDNZ/Thrill Supply graphics.</p><div id="overlay-preview" class="graphic"></div><p class="muted">Original overlays, animation, OBS browser sources and automatic battle stage transitions must be migrated and rehearsed before production use.</p></div></section>
   </section>
  </main>
 </div>
-<script src="/pro/pro.js" defer></script>
+<script type="module" src="/pro/pro.js"></script>
 </body></html>
