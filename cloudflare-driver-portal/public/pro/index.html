@@ -1,0 +1,118 @@
+<!doctype html><html lang="en-NZ"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0d0e12"><meta name="robots" content="noindex,nofollow">
+<title>VDNZ Pro Championship · Broadcast &amp; Judging</title>
+<link rel="stylesheet" href="/pro/pro.css"></head>
+<body>
+<header class="mast">
+ <div class="brand"><span class="mark">VDNZ</span><span class="subtitle">VIRTUAL DRIFT NEW ZEALAND<br><b>PRO CHAMPIONSHIP</b></span></div>
+ <div class="mastlinks"><span class="staging">STAGING · NOT LIVE</span><a href="/hub/#broadcast">Main Hub</a></div>
+</header>
+<div class="warning"><strong>PRO CHAMPIONSHIP STAGING ONLY</strong> · Official workbook, OBS scenes and Discord are not connected. No Pro Development data or services are touched.</div>
+<div class="layout">
+ <nav class="rail" aria-label="Pro Championship operations">
+  <div class="railtitle">CHAMPIONSHIP CONTROL</div>
+  <a href="/hub/#overview">Main Hub</a>
+  <a href="/pro/control/qualifying" data-path="qualifying">Qualifying Control</a>
+  <a href="/pro/control/battle" data-path="battle">Battle Control</a>
+  <a href="/pro/control/settings" data-path="settings">Crew &amp; Settings</a>
+  <div class="railtitle">CREW DESKS</div>
+  <a href="/pro/commentary" data-path="commentary">Commentary</a>
+  <a href="/pro/judge?role=judge1" data-path="judge">Judging</a>
+  <div class="railtitle">OPERATIONS</div>
+  <a href="/hub/#drivers">Drivers &amp; Roll Call</a>
+  <a href="/hub/#groups">Qualifying Groups</a>
+  <a href="/hub/#media">Media &amp; Exports</a>
+  <a href="/pro/overlay" data-path="overlay">Graphics Preview</a>
+ </nav>
+ <main class="content">
+  <div class="topline"><span id="role-label" class="eyebrow">PRO CHAMPIONSHIP</span><span id="connection" class="status">Checking crew access</span></div>
+  <div id="notice" class="notice" aria-live="polite" hidden></div>
+  <section id="access" class="panel access" hidden>
+   <h1>Private crew access</h1>
+   <p>Open your unique link supplied by the Pro Championship organiser, or enter your crew key. The Main Hub Officials login also authorises the production screens.</p>
+   <form id="access-form" class="inline"><input id="crew-token" type="password" placeholder="Private Pro Championship crew key" autocomplete="off" required><button type="submit" class="primary">Connect</button></form>
+   <p class="muted">Only authorised VDNZ Pro Championship crew can load event data. Crew links are specific to each role.</p>
+  </section>
+  <section id="content-area" hidden>
+   <div class="hero"><div><span class="eyebrow" id="page-kicker">ROUND CONTROL</span><h1 id="page-title">Pro Championship</h1><p id="page-desc">VDNZ staging event operations</p></div><div class="livechip">PRIVATE STAGING ENVIRONMENT</div></div>
+   <div class="stats">
+     <div class="stat"><small>ROUND</small><strong id="round-summary">—</strong></div>
+     <div class="stat"><small>STAGE / MODE</small><strong id="stage-summary">—</strong></div>
+     <div class="stat"><small>RUN</small><strong id="run-summary">—</strong></div>
+     <div class="stat"><small>JUDGES LOCKED</small><strong id="locked-summary">—</strong></div>
+   </div>
+   <section id="controls" hidden>
+    <div class="columns">
+     <div class="panel"><h2>Event Selection <span class="tag">STAGING</span></h2><form id="event-form" class="formgrid">
+      <label>Round<input id="event-round" type="number" min="1" max="30" required></label>
+      <label>Run<select id="event-run"><option value="1">Run 1</option><option value="2">Run 2</option></select></label>
+      <label>Mode<select id="event-mode"><option value="qualifying">Qualifying</option><option value="battle">Battle</option></select></label>
+      <label>Battle Stage<select id="event-stage"><option>Top 32</option><option>Top 16</option><option>Great 8</option><option>Final 4</option><option>Finals</option></select></label>
+      <label class="wide">Current driver / Lead<select id="event-lead"><option value="">Select driver</option></select></label>
+      <label class="wide" id="chase-wrap">Opponent / Chase<select id="event-chase"><option value="">Select opponent</option></select></label>
+      <button class="primary wide" type="submit">Set Current Run</button>
+     </form><p class="muted">Selecting a run changes all staging crew screens. Driver records stay linked by permanent IDs.</p></div>
+     <div class="panel"><h2>Production Cue Safety</h2><div class="dangerline">OBS CONNECTION <b>NOT CONFIGURED</b></div>
+       <div class="disabledgrid"><button disabled>Show Driver Overlay</button><button disabled>Show Judge Scores</button><button disabled>Play Battle Result</button><button disabled>Go Live</button></div>
+       <p class="muted">These stay disabled until the real OBS relay, scene confirmation and original overlay package are connected. Nothing here switches scenes or goes on-air.</p>
+       <hr><h2>Judging Administration</h2><button id="reset-run" class="danger">Reset current staging run locks</button><p class="muted">Requires a confirmation. Does not alter official scores in the Season Master.</p>
+     </div>
+    </div>
+    <div class="panel"><h2>Current Judge Panel</h2><div id="control-scores" class="judgegrid"></div></div>
+    <div class="panel"><h2>Qualifying Groups</h2><div id="event-groups" class="groups"></div></div>
+   </section>
+   <section id="settings" hidden>
+    <div class="columns"><div class="panel">
+     <h2>Private Crew Links</h2><p>Generate separate links. Each new key immediately revokes the previous link for that role.</p>
+     <label>Staff role<select id="issue-role"><option value="commentary">Commentary</option><option value="judge1">Judge 1</option><option value="judge2">Judge 2</option><option value="judge3">Judge 3</option><option value="head">Head Judge</option></select></label>
+     <div class="inline"><button id="issue-key" class="primary">Generate Private Link</button><button id="revoke-key" class="danger">Revoke Role Link</button></div>
+     <div id="issued-wrap" hidden><label>Copy once, send privately to that crew member<input id="issued-url" readonly></label><button id="copy-issued">Copy Link</button></div>
+    </div><div class="panel"><h2>System Connections</h2>
+     <div class="sys"><b>Cloudflare D1</b><span class="good">STAGING CONNECTED</span></div>
+     <div class="sys"><b>Official Google Season Master</b><span>NOT CONNECTED</span></div>
+     <div class="sys"><b>OBS Scene Relay</b><span>NOT CONNECTED</span></div>
+     <div class="sys"><b>Original Broadcast Graphics</b><span>NOT MIGRATED</span></div>
+     <div class="sys"><b>Pro Development</b><span>INTENTIONALLY SEPARATE</span></div>
+     <p class="muted">No production scoring, broadcast cue or Discord action can run until each integration passes an off-air rehearsal.</p>
+     </div></div>
+    <div class="panel"><h2>Staging Audit &amp; Export</h2><button id="export-judging">Export Staging Judge Records (.json)</button><p class="muted">Exports only this staging database, not official championship results.</p></div>
+   </section>
+   <section id="judge" hidden>
+     <div class="columns">
+      <div class="panel"><h2>Your Judge Scorecard</h2><div id="judge-current" class="driver-box"></div>
+       <form id="judge-form">
+        <div id="qual-fields" class="formgrid">
+         <label>Line / 60<input type="number" id="score-line" min="0" max="60" step=".1" required></label>
+         <label>Angle / 20<input type="number" id="score-angle" min="0" max="20" step=".1" required></label>
+         <label>Style / 20<input type="number" id="score-style" min="0" max="20" step=".1" required></label>
+         <div class="score-total"><small>YOUR TOTAL / 100</small><strong id="score-total">0.0</strong></div>
+        </div>
+        <div id="vote-fields" hidden><h3>Battle Run 2 — Decision</h3>
+         <div class="votegrid"><label><input name="vote" type="radio" value="A"> Lead (A)</label><label><input name="vote" type="radio" value="B"> Chase (B)</label><label><input name="vote" type="radio" value="OMT"> One More Time</label><label><input name="vote" type="radio" value="Head"> Head Judge</label></div>
+        </div>
+        <label class="notelabel">One Judge Note<textarea id="judge-notes" rows="6" placeholder="Your notes for this driver / run"></textarea></label>
+        <div class="inline"><button class="primary" type="submit" id="lock-btn">Lock This Run</button><button id="save-notes" type="button">Save Notes</button></div>
+       </form><p id="judge-status" class="muted">Awaiting run selection</p>
+      </div>
+      <div class="panel"><h2>Judging Status</h2><div id="judge-locked" class="judgegrid"></div><h2>Current Run</h2><div id="judge-context" class="stack"></div><hr><h2>Staff Chat</h2><div id="judge-chat" class="chat"></div><form id="judge-chat-form" class="inline"><input name="message" placeholder="Message staff…" maxlength="500" required><button>Send</button></form></div>
+     </div>
+   </section>
+   <section id="commentary" hidden>
+    <div class="columns">
+     <div class="panel"><h2>Live Driver Profiles</h2><div id="commentary-drivers" class="drivercards"></div>
+      <h2>Judges Overlay Cue</h2><div id="judges-cue" class="cue">AWAITING JUDGES</div><p class="muted">An official “CALL THE RESULT NOW” cue will only be enabled after an OBS Program acknowledgement. No live timing feed is connected yet.</p>
+     </div>
+     <div class="panel"><h2>Judges &amp; Current Decision</h2><div id="commentary-scores" class="judgegrid"></div><div id="commentary-result" class="result"></div><h2>Staff Chat</h2><div id="commentary-chat" class="chat"></div><form id="commentary-chat-form" class="inline"><input name="message" placeholder="Message judges and race control…" maxlength="500" required><button>Send</button></form></div>
+    </div>
+    <div class="columns">
+     <div class="panel"><h2>Qualifying Order</h2><div id="commentary-groups" class="groups"></div></div>
+     <div class="panel"><h2>Championship Snapshot</h2><div id="commentary-standings" class="stack"></div><p class="muted">Staging Driver Portal points only. Official series standings integration is pending.</p></div>
+    </div>
+   </section>
+   <section id="overlay" hidden><div class="panel"><h2>OBS Graphics Preview</h2><p>Static staging preview, never an on-air source. This page does not contain the final approved VDNZ/Thrill Supply graphics.</p><div id="overlay-preview" class="graphic"></div><p class="muted">Original overlays, animation, OBS browser sources and automatic battle stage transitions must be migrated and rehearsed before production use.</p></div></section>
+  </section>
+ </main>
+</div>
+<script src="/pro/pro.js" defer></script>
+</body></html>
