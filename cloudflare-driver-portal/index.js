@@ -171,6 +171,28 @@ async function handle(req,env){
   const obj=await env.BUCKET.get(row.file_key);if(!obj)return fail("File missing from staging storage",404);
   return new Response(obj.body,{headers:{"Content-Type":obj.httpMetadata?.contentType||"application/octet-stream","Content-Disposition":"attachment; filename=\""+row.file_name.replace(/[^\w .-]/g,"_")+"\"","Cache-Control":"private, no-store"}});
  }
+ if(path==="/api/admin/crew"&&method==="GET"){
+  staffRequired(u);
+  const rows=await env.DB.prepare("SELECT role,url,updated_at FROM portal_crew_links ORDER BY role").all();
+  return json({links:rows.results||[],liveIntegration:"not-connected"});
+ }
+ if(path==="/api/admin/crew"&&method==="POST"){
+  staffRequired(u);
+  const b=await body(req),role=s(b.role,30),address=s(b.url,2048);
+  if(!["commentary","judge1","judge2","judge3","head","producer","broadcast"].includes(role))return fail("Invalid crew role");
+  if(!address){
+   await env.DB.prepare("DELETE FROM portal_crew_links WHERE role=?").bind(role).run();
+   return json({ok:true,removed:true});
+  }
+  let target;try{target=new URL(address);}catch{return fail("Enter a complete HTTPS URL");}
+  if(target.protocol!=="https:"||target.username||target.password)return fail("Only HTTPS staff links can be saved");
+  const host=target.hostname.toLowerCase();
+  const isWorkers=host.endsWith(".workers.dev")&&host.includes("vdnz")&&host.includes("pro");
+  const isVDNZ=host.endsWith(".virtualdriftnz.co.nz")&&/(pro|championship)/.test(host.split(".")[0]);
+  if((!isWorkers&&!isVDNZ)||/development|pro-dev|broadcastbusinesssuite/.test(address.toLowerCase())||host==="judge.virtualdriftnz.co.nz")return fail("Only dedicated Cloudflare-hosted VDNZ Pro Championship crew services are allowed");
+  await env.DB.prepare("INSERT INTO portal_crew_links(role,url,updated_at) VALUES(?,?,?) ON CONFLICT(role) DO UPDATE SET url=excluded.url,updated_at=excluded.updated_at").bind(role,address,time()).run();
+  return json({ok:true,role});
+ }
  if(path==="/api/admin/social"&&method==="GET"){
   staffRequired(u);
   const result=await env.DB.prepare("SELECT id,title,body,channels,status,created_at FROM portal_social_drafts ORDER BY created_at DESC LIMIT 100").all();
