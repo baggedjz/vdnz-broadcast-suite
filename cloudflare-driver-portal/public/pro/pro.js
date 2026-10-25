@@ -92,6 +92,7 @@ function judgeView(d){
  }
  const box=$("judge-current");replace(box,el("h3",driverName(d,s.lead_id)),el("p",s.mode==="battle"?"Lead: "+driverName(d,s.lead_id)+" · Chase: "+driverName(d,s.chase_id):"Qualifying · Round "+s.round+" · Run "+s.run));
  show("qual-fields",s.mode==="qualifying");show("vote-fields",s.mode==="battle");
+ for(const id of ["score-line","score-angle","score-style"])$(id).disabled=s.mode!=="qualifying";
  const isJudge=["judge1","judge2","judge3","head"].includes(d.role),locked=!!mine?.locked;
  $("lock-btn").disabled=!isJudge||locked||!s.lead_id||(s.mode==="battle"&&s.run!==2);
  $("save-notes").disabled=!isJudge||!locked;
