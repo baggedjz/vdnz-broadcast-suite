@@ -1,5 +1,20 @@
-// Cache the public application shell only. Authenticated API responses never enter Cache Storage.
-const CACHE="vdnz-driver-portal-staging-shell-v2";
-self.addEventListener("install",e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(["/","/styles.css","/app.js","/icon.svg","/manifest.webmanifest"])));self.skipWaiting();});
-self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim();});
-self.addEventListener("fetch",e=>{const u=new URL(e.request.url);if(e.request.method!=="GET"||u.origin!==self.location.origin||u.pathname.startsWith("/api/")||u.pathname==="/health")return;e.respondWith(fetch(e.request).then(r=>{if(r.ok&&r.type==="basic"){const copy=r.clone();caches.open(CACHE).then(c=>c.put(e.request,copy));}return r;}).catch(()=>caches.match(e.request)));});
+// VDNZ Driver Portal: cache PUBLIC static shell only, never private hub or authenticated endpoints.
+const CACHE="vdnz-driver-portal-staging-shell-v4";
+const PUBLIC_FILES=["/","/styles.css","/app.js","/icon.svg","/manifest.webmanifest"];
+self.addEventListener("install",event=>{
+ event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(PUBLIC_FILES)));
+ self.skipWaiting();
+});
+self.addEventListener("activate",event=>{
+ event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key)))));
+ self.clients.claim();
+});
+self.addEventListener("fetch",event=>{
+ const req=event.request,url=new URL(req.url);
+ if(req.method!=="GET"||url.origin!==self.location.origin||url.pathname.startsWith("/api/")||url.pathname.startsWith("/hub")||url.pathname==="/health")return;
+ if(!PUBLIC_FILES.includes(url.pathname))return;
+ event.respondWith(fetch(req).then(response=>{
+  if(response.ok&&response.type==="basic")caches.open(CACHE).then(cache=>cache.put(req,response.clone()));
+  return response;
+ }).catch(()=>caches.match(req)));
+});
