@@ -8,7 +8,7 @@ const page=pages.find(p=>p==="qualifying"?path.includes("/qualifying"):p==="batt
 const names={staff:"Officials",judge1:"Judge 1",judge2:"Judge 2",judge3:"Judge 3",head:"Head Judge",commentary:"Commentators"};
 const option=(value,label)=>{const x=el("option",label);x.value=value;return x};
 let crewToken="",current=null,renderKey="",settingForm=false,loading=false,toastTimeout,populateInvites=()=>{};
-try{crewToken=new URLSearchParams(location.hash.slice(1)).get("key")||sessionStorage.getItem("vdnz-pro-staging-crew-key")||"";if(location.hash.includes("key=")){sessionStorage.setItem("vdnz-pro-staging-crew-key",crewToken);history.replaceState(null,"",location.pathname+location.search)}}catch{}
+try{crewToken=new URLSearchParams(location.hash.slice(1)).get("key")||sessionStorage.getItem("vdnz-pro-staging-crew-key")||"";if(location.hash.includes("key=")){sessionStorage.setItem("vdnz-pro-staging-crew-key",crewToken);history.replaceState(null,"",location.pathname+location.search)}if(!["judge","commentary"].includes(page))crewToken="";}catch{}
 function show(id,value=true){$(id).hidden=!value}
 function notice(message,error=false){const n=$("notice");n.textContent=message;n.classList.toggle("error",error);show("notice");clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>show("notice",false),6500)}
 async function api(uri,body){
