@@ -11,6 +11,7 @@ if (-not ((Get-Content $Config -Raw).Contains("vdnz-pro-championship-staging")))
 $Source = "https://raw.githubusercontent.com/baggedjz/vdnz-broadcast-suite/cloudflare-driver-portal-staging-2026/cloudflare-driver-portal"
 $Files = @(
   "index.js",
+  "wrangler.jsonc",
   "hub-pages.js",
   "pro-api.js",
   "pro-workflows.js",
@@ -34,6 +35,13 @@ foreach ($File in $Files) {
   Write-Host "Getting $File"
   Invoke-WebRequest -UseBasicParsing -Uri "$Source/$File" -OutFile $Dest
 }
+$ActualConfig = Get-Content ".\wrangler.jsonc" -Raw
+if (-not $ActualConfig.Contains('"name": "vdnz-pro-championship-staging"') -or
+    -not $ActualConfig.Contains('"run_worker_first": true') -or
+    -not $ActualConfig.Contains('d4cf3b35-e42d-4d4a-927f-f1966931c93d')) {
+  throw "Downloaded Cloudflare staging configuration does not match the intended Worker/D1 or Worker-first routing. No deployment made."
+}
+Write-Host "PASS: Correct Pro Championship staging Worker, D1 and Worker-first routing."
 foreach ($File in @("index.js","hub-pages.js","pro-pages.js","pro-api.js","pro-workflows.js","public/pro/pro.js","public/pro/crew-workflows.js")) {
   node --check $File
   if ($LASTEXITCODE -ne 0) { throw "JavaScript validation failed: $File" }
@@ -70,22 +78,36 @@ npx --yes wrangler deploy --config ".\wrangler.jsonc"
 if ($LASTEXITCODE -ne 0) { throw "Cloudflare staging deployment failed" }
 
 $Root = "https://vdnz-pro-championship-staging.dylwhare.workers.dev"
-foreach ($Check in @(
-  @{ Path = "/pro/commentary"; Text = "interview-form" },
-  @{ Path = "/pro/judge?role=judge1"; Text = "protests-list" },
-  @{ Path = "/pro/control/qualifying"; Text = "event-form" },
-  @{ Path = "/hub/"; Text = "Main Hub Login" }
-)) {
+$Checks = @(
+  @{ Path = "/pro/?view=commentary"; Text = 'id="interview-form"' },
+  @{ Path = "/pro/?view=judge&role=judge1"; Text = 'id="protests-list"' },
+  @{ Path = "/pro/?view=qualifying"; Text = 'id="event-form"' },
+  @{ Path = "/hub/"; Text = 'id="login-form"' }
+)
+Write-Host "Checking each deployed page; showing the exact URL and HTTP error if a route fails..."
+foreach ($Check in $Checks) {
   $Url = $Root + $Check.Path
-  $Response = Invoke-WebRequest -UseBasicParsing -Uri $Url -MaximumRedirection 2
-  if ($Response.StatusCode -ne 200 -or -not $Response.Content.Contains($Check.Text)) {
-    throw "Deployment responded unexpectedly at $Url. See the output above."
+  Write-Host ("TESTING: " + $Url)
+  try {
+    $Response = Invoke-WebRequest -UseBasicParsing -Uri $Url -MaximumRedirection 3 -Headers @{ "Cache-Control"="no-cache" } -ErrorAction Stop
   }
-  Write-Host ("PASS: " + $Check.Path)
+  catch {
+    $Status = "unknown"
+    if ($_.Exception.Response -and $_.Exception.Response.StatusCode) {
+      $Status = [int]$_.Exception.Response.StatusCode
+    }
+    Write-Host ("FAILED: " + $Url + " returned HTTP " + $Status) -ForegroundColor Red
+    Write-Host ("Reason: " + $_.Exception.Message) -ForegroundColor Red
+    throw "One staging page is not accessible. This does NOT mean the database migration failed."
+  }
+  if ($Response.StatusCode -ne 200 -or -not $Response.Content.Contains($Check.Text)) {
+    throw ("INCORRECT PAGE AT: " + $Url + " | HTTP: " + $Response.StatusCode + " | Expected: " + $Check.Text)
+  }
+  Write-Host ("PASS: " + $Check.Path) -ForegroundColor Green
 }
 Write-Host ""
-Write-Host "VDNZ PRO CHAMPIONSHIP STAGING - DEPLOYMENT VERIFIED"
+Write-Host "VDNZ PRO CHAMPIONSHIP STAGING - PAGES VERIFIED"
 Write-Host "$Root/hub/#broadcast"
-Write-Host "$Root/pro/commentary"
-Write-Host "$Root/pro/judge?role=judge1"
-Write-Host "$Root/pro/control/settings"
+Write-Host "$Root/pro/?view=commentary"
+Write-Host "$Root/pro/?view=judge&role=judge1"
+Write-Host "$Root/pro/?view=settings"
