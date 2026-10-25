@@ -22,13 +22,13 @@ function button(label,cb,cls="btn"){const b=el("button",label,cls);b.type="butto
 function line(label,detail){const p=el("p");add(p,el("strong",label+": "),el("span",detail||"Not available yet"));return p;}
 function card(title,content=""){const d=el("article",undefined,"item");add(d,el("h3",title));if(content)add(d,el("p",content));return d;}
 function statusBadge(text){const x=el("span",text||"Pending","pill");if(["Pending","New","Under Review","Not Here"].includes(text))x.classList.add("warn");if(["Suspended","Declined"].includes(text))x.classList.add("err");return x;}
-function showAuth(tab){$("auth").hidden=false;$("driver").hidden=true;$("staff").hidden=true;$("logout").hidden=true;q("[data-auth]").forEach(b=>b.classList.toggle("active",b.dataset.auth===tab));for(const k of ["login","signup","staff"])$("form-"+k).hidden=k!==tab;}
+function showAuth(tab){$("mainhub-link").hidden=true;$("auth").hidden=false;$("driver").hidden=true;$("staff").hidden=true;$("logout").hidden=true;q("[data-auth]").forEach(b=>b.classList.toggle("active",b.dataset.auth===tab));for(const k of ["login","signup","staff"])$("form-"+k).hidden=k!==tab;}
 function showDriverPage(page){selectedDriverView=page;q("[data-page]").forEach(x=>x.classList.toggle("active",x.dataset.page===page));q("#driver .view").forEach(x=>x.hidden=x.id!==page);scrollTo(0,0);}
 function showStaffPage(page){selectedStaffView=page;q("[data-staff-page]").forEach(x=>x.classList.toggle("active",x.dataset.staffPage===page));q("#staff .staffview").forEach(x=>x.hidden=x.id!==page);scrollTo(0,0);}
 async function loginAndOpen(){
  const r=await api("/api/me");me=r.user;
  if(!me){showAuth("login");return;}
- $("auth").hidden=true;$("logout").hidden=false;
+ $("auth").hidden=true;$("logout").hidden=false;$("mainhub-link").hidden=me.role!=="staff";
  if(me.role==="staff"){$("driver").hidden=true;$("staff").hidden=false;await refreshStaff();showStaffPage(selectedStaffView);}
  else{$("staff").hidden=true;$("driver").hidden=false;await refreshDriver();showDriverPage(selectedDriverView);}
 }
