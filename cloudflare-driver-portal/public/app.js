@@ -27,7 +27,7 @@ function showDriverPage(page){selectedDriverView=page;q("[data-page]").forEach(x
 function showStaffPage(page){selectedStaffView=page;q("[data-staff-page]").forEach(x=>x.classList.toggle("active",x.dataset.staffPage===page));q("#staff .staffview").forEach(x=>x.hidden=x.id!==page);scrollTo(0,0);}
 async function loginAndOpen(){
  const r=await api("/api/me");me=r.user;
- if(!me){showAuth("login");return;}
+ if(!me){showAuth(new URLSearchParams(location.search).get("staff")==="1"?"staff":"login");return;}
  $("auth").hidden=true;$("logout").hidden=false;$("mainhub-link").hidden=me.role!=="staff";
  if(me.role==="staff"){$("driver").hidden=true;$("staff").hidden=false;await refreshStaff();showStaffPage(selectedStaffView);}
  else{$("staff").hidden=true;$("driver").hidden=false;await refreshDriver();showDriverPage(selectedDriverView);}
