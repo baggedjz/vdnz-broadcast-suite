@@ -24,7 +24,10 @@ function pageHead(){
  $("page-kicker").textContent="PRO CHAMPIONSHIP / STAGING";
  $("page-title").textContent=map[page][0];$("page-desc").textContent=map[page][1];
  for(const id of ["controls","settings","judge","commentary","overlay"])show(id,id===(["qualifying","battle"].includes(page)?"controls":page));
- for(const a of document.querySelectorAll(".rail a[data-path]"))a.classList.toggle("selected",a.dataset.path===page);
+ for(const a of document.querySelectorAll(".rail a[data-path]")){
+  const selected=a.dataset.path===page&&(page!=="judge"||new URL(a.href).searchParams.get("role")===(new URLSearchParams(location.search).get("role")||"judge1"));
+  a.classList.toggle("selected",selected);
+}
 }
 function stats(d){
  const s=d.state;
