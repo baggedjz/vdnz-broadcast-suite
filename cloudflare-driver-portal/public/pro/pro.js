@@ -4,7 +4,8 @@ const el=(tag,value="",cls="")=>{const e=document.createElement(tag);e.textConte
 const replace=(target,...items)=>target.replaceChildren(...items);
 const pages=["qualifying","battle","settings","judge","commentary","overlay"];
 const path=location.pathname;
-const page=pages.find(p=>p==="qualifying"?path.includes("/qualifying"):p==="battle"?path.includes("/battle"):p==="settings"?path.includes("/settings"):path.includes("/"+p))||"qualifying";
+const selectedView=new URLSearchParams(location.search).get("view");
+const page=pages.includes(selectedView)?selectedView:(pages.find(p=>p==="qualifying"?path.includes("/qualifying"):p==="battle"?path.includes("/battle"):p==="settings"?path.includes("/settings"):path.includes("/"+p))||"qualifying");
 const names={staff:"Officials",judge1:"Judge 1",judge2:"Judge 2",judge3:"Judge 3",head:"Head Judge",commentary:"Commentators"};
 const option=(value,label)=>{const x=el("option",label);x.value=value;return x};
 let crewToken="",current=null,renderKey="",settingForm=false,loading=false,toastTimeout,populateInvites=()=>{};
