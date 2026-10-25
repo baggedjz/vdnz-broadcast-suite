@@ -25,9 +25,17 @@ async function check(){
  if(!me.user||me.user.role!=="staff"){location.replace("/hub/login");throw Error("Staff session required");}
 }
 function go(page){
+ const valid=$all(".navbtn[data-tab]").map(b=>b.dataset.tab);
+ if(page==="crew")page="broadcast";
+ if(!valid.includes(page))page="overview";
  active=page;
  $all(".tabpage").forEach(x=>x.hidden=x.id!=="tab-"+page);
- $all(".navbtn").forEach(x=>x.classList.toggle("current",x.dataset.tab===page));
+ $all(".navbtn").forEach(x=>{
+  const selected=x.dataset.tab===page;
+  x.classList.toggle("current",selected);
+  if(selected)x.setAttribute("aria-current","page");else x.removeAttribute("aria-current");
+ });
+ if(location.hash!=="#"+page)history.replaceState(null,"","#"+page);
  scrollTo(0,0);
 }
 function metric(name,value){
@@ -197,5 +205,10 @@ send("notify-form","/api/admin/notify",null,load);
 send("asset-form","/api/admin/asset",null,load);
 send("social-form","/api/admin/social",f=>({title:val(f,"title"),body:val(f,"body"),channels:val(f,"channels")}),async()=>{$("social-form").reset();await loadSocial()});
 send("crew-form","/api/admin/crew",f=>({role:val(f,"role"),url:val(f,"url")}),loadCrew);
-(async()=>{try{await check();await Promise.all([load(),loadSocial(),loadHealth(),loadCrew()]);}catch(e){if(!String(e.message).includes("Staff session"))msg(e.message,true)}})();
+window.addEventListener("hashchange",()=>go(location.hash.slice(1)));
+(async()=>{try{
+ await check();
+ go(location.hash.slice(1)||"overview");
+ await Promise.all([load(),loadSocial(),loadHealth(),loadCrew()]);
+}catch(e){if(!String(e.message).includes("Staff session"))msg(e.message,true)}})();
 setInterval(()=>load().catch(()=>{}),60000);
