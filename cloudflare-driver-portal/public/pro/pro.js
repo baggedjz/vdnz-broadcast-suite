@@ -130,3 +130,63 @@ async function refresh(){
  finally{loading=false}
 }
 async function perform(uri,body){try{const v=await api(uri,body);notice(v.note||"Saved in staging");await refresh();return v}catch(e){notice(e.message,true);return null}}
+
+$("access-form").addEventListener("submit",async e=>{
+ e.preventDefault();crewToken=$("crew-token").value.trim();
+ try{sessionStorage.setItem("vdnz-pro-staging-crew-key",crewToken)}catch{}
+ await refresh();
+});
+$("event-mode").addEventListener("change",()=>{settingForm=true;show("chase-wrap",$("event-mode").value==="battle")});
+for(const id of ["event-round","event-run","event-stage","event-lead","event-chase"])$(id).addEventListener("change",()=>settingForm=true);
+$("event-form").addEventListener("submit",async e=>{
+ e.preventDefault();if(!current)return;
+ const payload={version:current.state.version,round:Number($("event-round").value),run:Number($("event-run").value),mode:$("event-mode").value,stage:$("event-stage").value,lead_id:$("event-lead").value,chase_id:$("event-mode").value==="battle"?$("event-chase").value:""};
+ settingForm=false;await perform("/api/pro/event",payload);renderKey="";
+});
+$("reset-run").addEventListener("click",async()=>{
+ if(!current||!confirm("Delete ONLY the current staging run's judge scores and locks?"))return;
+ await perform("/api/pro/reset",{confirm:"RESET CURRENT RUN"});
+});
+const total=()=>{$("score-total").textContent=["score-line","score-angle","score-style"].reduce((sum,id)=>sum+Number($(id).value||0),0).toFixed(1)};
+for(const id of ["score-line","score-angle","score-style"])$(id).addEventListener("input",total);
+$("judge-form").addEventListener("submit",async e=>{
+ e.preventDefault();if(!current)return;
+ const b={notes:$("judge-notes").value};
+ if(current.state.mode==="qualifying"){b.line=Number($("score-line").value);b.angle=Number($("score-angle").value);b.style=Number($("score-style").value);}
+ else{
+  const vote=document.querySelector('input[name="vote"]:checked');
+  if(!vote)return notice("Select a decision first",true);
+  b.vote=vote.value;
+ }
+ await perform("/api/pro/score",b);
+});
+$("save-notes").addEventListener("click",async()=>await perform("/api/pro/notes",{notes:$("judge-notes").value}));
+for(const id of ["judge-chat-form","commentary-chat-form"]){
+ $(id).addEventListener("submit",async e=>{
+  e.preventDefault();const field=$(id).elements.message;const v=field.value.trim();if(!v)return;
+  if(await perform("/api/pro/chat",{message:v}))field.value="";
+ });
+}
+$("issue-key").addEventListener("click",async()=>{
+ const x=await perform("/api/pro/crew/issue",{role:$("issue-role").value});
+ if(x){$("issued-url").value=x.url;show("issued-wrap")}
+});
+$("revoke-key").addEventListener("click",async()=>{
+ if(!confirm("Revoke this crew member's existing link?"))return;
+ if(await perform("/api/pro/crew/revoke",{role:$("issue-role").value})){show("issued-wrap",false);$("issued-url").value="";}
+});
+$("copy-issued").addEventListener("click",async()=>{
+ await navigator.clipboard.writeText($("issued-url").value);notice("Private link copied. Share with intended crew member only.");
+});
+$("export-judging").addEventListener("click",async()=>{
+ try{
+  const data=await api("/api/pro/history");
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob),link=document.createElement("a");
+  link.href=url;link.download="vdnz-pro-championship-STAGING-judging.json";document.body.append(link);link.click();link.remove();URL.revokeObjectURL(url);
+ }catch(e){notice(e.message,true)}
+});
+populateInvites=setupInterviews(api,notice,()=>current?.drivers||[],()=>current?.role)||(()=>{});
+pageHead();
+refresh();
+setInterval(refresh,12000);
