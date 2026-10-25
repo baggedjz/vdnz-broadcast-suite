@@ -15,7 +15,7 @@ $Files = @(
   "pro-api.js",
   "pro-workflows.js",
   "pro-pages.js",
-  "migration.sql",
+  "hub-extension.sql",
   "pro-migration.sql",
   "public/hub/index.html",
   "public/hub/login.html",
@@ -47,11 +47,24 @@ if (-not $Worker.Contains('proApi(req,env,u,path)') -or
     -not $Pro.Contains("interview-form")) {
   throw "Missing Pro Championship workflow files. No deployment made."
 }
-Write-Host "Updating staging D1 only..."
-npx --yes wrangler d1 execute vdnz-pro-championship-staging --remote --file ".\migration.sql"
-if ($LASTEXITCODE -ne 0) { throw "Core staging migration failed" }
+# The Driver Portal is already installed. NEVER rerun migration.sql here.
+# It contains a legacy portal_assets index and is not a reliable incremental upgrade.
+Write-Host "Checking existing staging D1 tables (read-only)..."
+$SchemaQuery = "SELECT (SELECT COUNT(*) FROM portal_users) AS drivers, (SELECT COUNT(*) FROM portal_messages) AS requests, (SELECT COUNT(*) FROM portal_invites) AS invites, (SELECT COUNT(*) FROM portal_notifications) AS alerts, (SELECT COUNT(*) FROM portal_sessions) AS sessions;"
+npx --yes wrangler d1 execute vdnz-pro-championship-staging --remote --command $SchemaQuery
+if ($LASTEXITCODE -ne 0) {
+  throw "Existing staging Driver Portal tables could not be verified. Exact Wrangler error is shown above. No schema or Worker changes made."
+}
+Write-Host "Adding ONLY missing Main Hub extension tables, without changing existing driver data..."
+npx --yes wrangler d1 execute vdnz-pro-championship-staging --remote --file ".\hub-extension.sql"
+if ($LASTEXITCODE -ne 0) {
+  throw "Additive Main Hub extension migration failed. Exact Wrangler error is shown above. No Worker changes made."
+}
+Write-Host "Adding ONLY new Pro Championship judging and interview-workflow tables..."
 npx --yes wrangler d1 execute vdnz-pro-championship-staging --remote --file ".\pro-migration.sql"
-if ($LASTEXITCODE -ne 0) { throw "Pro Championship migration failed" }
+if ($LASTEXITCODE -ne 0) {
+  throw "Additive Pro Championship migration failed. Exact Wrangler error is shown above. No Worker changes made."
+}
 Write-Host "Deploying the updated staging Worker..."
 npx --yes wrangler deploy --config ".\wrangler.jsonc"
 if ($LASTEXITCODE -ne 0) { throw "Cloudflare staging deployment failed" }
