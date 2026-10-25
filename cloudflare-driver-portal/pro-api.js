@@ -1,3 +1,4 @@
+import { proWorkflow } from "./pro-workflows.js";
 // Dedicated Pro Championship staging engine. No live workbook, OBS or Pro Development writes.
 const roles=["commentary","judge1","judge2","judge3","head"];
 const stages=["Top 32","Top 16","Great 8","Final 4","Finals"];
@@ -51,6 +52,7 @@ async function payload(req){
 export async function proApi(req,env,staff,path){
  const role=await access(req,env,staff),method=req.method;
  if(!role)return fail("Pro Championship staff or crew access required",401);
+ if(path.startsWith("/api/pro/protests")||path.startsWith("/api/pro/interviews"))return await proWorkflow(req,env,role,path);
  if(path==="/api/pro/snapshot"&&method==="GET")return json(await snapshot(env,role));
  if(path==="/api/pro/chat"&&method==="POST"){
   const b=await payload(req),message=clean(b.message,500);if(!message)return fail("Type a message",400);
